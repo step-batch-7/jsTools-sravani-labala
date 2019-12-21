@@ -1,8 +1,4 @@
-const {
-  parseUserOptions,
-  loadLines,
-  joinRequiredLines
-} = require("./src/utility");
+const { parseUserOptions, loadLines } = require("./src/utility");
 
 const main = function() {
   const commandLineArgs = process.argv;

@@ -16,18 +16,20 @@ const loadLines = function(parsedUserInputs) {
   let fileContent = [parsedUserInputs.lines];
   const fileName = parsedUserInputs.fileNames[0];
   if (!fs.existsSync(fileName)) {
-    // return [fileName];
     return generateErrorMessage([fileName]);
   }
   let content = fs.readFileSync(fileName, "utf8");
   fileContent.push([content]);
-  // return fileContent;
   return joinRequiredLines(fileContent);
 };
 
 const parseUserOptions = function(commandLineArgs) {
   let parsedUserInputs = { lines: 10 };
-  const userArgs = commandLineArgs.slice(2);
+  let userArgs = commandLineArgs.slice(2);
+  if (userArgs.includes("-n")) {
+    parsedUserInputs.lines = userArgs[userArgs.indexOf("-n") + 1];
+    userArgs = userArgs.slice(2);
+  }
   parsedUserInputs["fileNames"] = userArgs;
   return parsedUserInputs;
 };

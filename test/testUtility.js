@@ -7,11 +7,18 @@ const {
 } = require("./../src/utility");
 
 describe("parseUserOptions", function() {
-  it("should parse the user inputs from array to object format", function() {
+  it("should parse fileName and the default lines as 10 if number of lines is not mentioned", function() {
     const commandLineArgs = ["node", "tail.js", "goodFile"];
     assert.deepStrictEqual(parseUserOptions(commandLineArgs), {
       fileNames: ["goodFile"],
       lines: 10
+    });
+  });
+  it("should parse fileName and the number of lines given in the command line args", function() {
+    const commandLineArgs = ["node", "tail.js", "-n", "5", "goodFile"];
+    assert.deepStrictEqual(parseUserOptions(commandLineArgs), {
+      fileNames: ["goodFile"],
+      lines: "5"
     });
   });
 });
