@@ -1,0 +1,250 @@
+features:-
+
+1)//single file
+  A) node tail.js fileName   --planning done--
+  B) node tail.js -n 6 fileName  --planning done--
+  C) node tail.js -6 fileName    --planning done--
+3)//multiple files
+  D) node tail.js fileName1 fileName2 ...  --planning done--
+  E) node tail.js -n 6 fileName1 fileName2 ... --planning done--
+  F) node tail.js -6 fileName1 fileName2 ...  --planning done--
+4)//piping (input from other)
+  G) cat fileName | node tail.js   --planning done--
+  H) cat fileName | node tail.js -n 6  --planning done--
+2)//standard inputs
+  I) node tail.js     --planning done--
+  J) node tail.js -n 6  --planning done--
+//options
+  -n number of lines
+      number along with "+" sign (example: node tail.js -n +5 fileName)
+      number along with "-" sign (example: node tail.js -n -5 fileName)
+      number along with NO sign (example: node tail.js -n 5 fileName)
+  -r reverse the file required output
+  -q removes headlines while giving output ie., removes filenames while displaying multiple files
+
+file :- three types
+    a)sampleText1 =  //more than or equal to required lines
+      1
+      2
+      3
+      4
+      5
+      6
+      7
+      8
+      9
+      10
+      11
+      12
+      13
+      14
+      15
+
+    b) sampleText2 =  //less than required lines
+      1
+      2
+      3
+      4
+      5
+
+    c)wrongFile (no file) //error file
+
+--------------------------------------------------
+
+A) node tail.js fileName  
+  
+BlackBox :- 
+  [fileName] => {tail.js} => (
+    a)
+      6
+      7
+      8
+      9
+      10
+      11
+      12
+      13
+      14
+      15
+
+    b)
+      1
+      2
+      3
+      4
+      5
+
+    c)
+      tail: wrongFile: no such file or directory
+  )
+
+B) node tail.js -n 6 fileName
+
+BlackBox :- 
+  [fileName] => {tail.js} => (
+    a)
+      9
+      10
+      11
+      12
+      13
+      14
+      15
+
+    b)
+      1
+      2
+      3
+      4
+      5
+
+    c)
+      tail: wrongFile: no such file or directory
+  )
+
+C) node tail.js -6 fileName
+
+BlackBox :- 
+  [fileName] => {tail.js} => (
+    a)
+      9
+      10
+      11
+      12
+      13
+      14
+      15
+
+    b)
+      1
+      2
+      3
+      4
+      5
+
+    c)
+      tail: wrongFile: no such file or directory
+  )
+
+G) cat fileName | tail
+
+BlackBox :-   
+  [content from file] => {tail.js} => (   //let the files be the same files which were mentioned above
+    a)
+      6
+      7
+      8
+      9
+      10
+      11
+      12
+      13
+      14
+      15
+
+    b)
+      1
+      2
+      3
+      4
+      5
+  )
+// if the file doesn't exist it will throw error before it comes to the tail command
+
+H) cat fileName | tail -n 5
+
+BlackBox :- 
+  [fileName] => {tail.js} => (
+    a)
+      9
+      10
+      11
+      12
+      13
+      14
+      15
+
+    b)
+      1
+      2
+      3
+      4
+      5
+  )
+// if the file doesn't exist it will throw error before it comes to the tail command
+
+-------------process flow--------------   
+
+[1a]    //if the file exists
+output: lines of text: tailLines
+  //last required number of lines
+
+input: array of content: lines
+  [lines,[[file1],[file2]]] or
+  [lines,[content]]
+
+name: joinLastRequiredLines
+
+[1b]    //if the file doesn't exist or the number of lines is not given but option is specified
+output: lines of text: error message
+  tail: fileName: no such file or directory (or)
+  tail: illegal offset -- fileName
+
+input: text: filePath
+  [fileName...]
+
+name: generateErrorMessage
+
+[2]
+output: array of content: lines (or)  array of files: error files
+  [lines,[[file1],[file2]]] or
+  [filenames...]  // error files
+
+input: object :{filePath:[],lines:number}
+  {fileName:['fileName','fileName2'...],lines: lines}
+
+name: loadLines
+
+[3a]
+output: object :{filePath:[],lines:number}
+  {fileName:['fileName1','fileName2'...],lines: lines} // lines can be default 10 or the user required lines
+
+input: array of text: userOptions
+  ['fileName'] or
+  [lines,'fileName'] or
+  ['fileName1','fileName2'] or
+  [lines,'fileName1','fileName2',...]
+
+name: readFilePath
+
+[3b]
+output: array of content: lines
+  [lines,[content]  // lines can be default 10 or the user required lines
+
+input: text: content
+  //content from previous output or through the standard input
+
+name: getContent
+
+[4]
+output: array of text: userOptions
+  ['fileName'] or
+  [lines,'fileName'] or
+  ['fileName1','fileName2'] or
+  [lines,'fileName1','fileName2',...] or 
+  [lines]
+  
+input: array of strings: commandLineArgs
+  ['node','tail.js','fileName'] or  
+  ['node','tail.js','6','fileName'] or 
+  ['node','tail.js','-n','6','fileName'] or
+  ['node','tail.js','fileName1','fileName2'...] or
+  ['node','tail.js','-n','6','fileName1','fileName2'...] or
+  ['node','tail.js','6','fileName1','fileName2'...] or
+
+  ['node','tail.js'] or  
+  ['node','tail.js','-n','6']
+
+name : filterUserOptions
+
+-------------------------------------------------
