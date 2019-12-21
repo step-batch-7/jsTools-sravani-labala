@@ -1,17 +1,17 @@
 features:-
 
-1)//single file
+1)single file
   A) node tail.js fileName   --planning done--
   B) node tail.js -n 6 fileName  --planning done--
   C) node tail.js -6 fileName    --planning done--
-3)//multiple files
+3)multiple files
   D) node tail.js fileName1 fileName2 ...  --planning done--
   E) node tail.js -n 6 fileName1 fileName2 ... --planning done--
   F) node tail.js -6 fileName1 fileName2 ...  --planning done--
-4)//piping (input from other)
+4)piping (input from other)
   G) cat fileName | node tail.js   --planning done--
   H) cat fileName | node tail.js -n 6  --planning done--
-2)//standard inputs
+2)standard inputs
   I) node tail.js     --planning done--
   J) node tail.js -n 6  --planning done--
 //options
@@ -219,7 +219,7 @@ name: readFilePath
 
 [3b]
 output: array of content: lines
-  [lines,[content]  // lines can be default 10 or the user required lines
+  [lines,[content]]  // lines can be default 10 or the user required lines
 
 input: text: content
   //content from previous output or through the standard input

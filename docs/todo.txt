@@ -19,3 +19,21 @@ requirements :-
   J) cat fileName | node tail.js -n 6  
 
 ---planning done----
+
+---------------------------
+implementation
+
+  create folders :- src , test
+  create files :- tail.js, utility.js, testUtility.js 
+  make connections :-
+    to main file and utility.js
+    to test file and src file
+  make sure that mocha runs
+
+v0.1
+  A)node tail.js goodFile
+
+    a)parseUserOptions
+    b)readFilePath
+    c)loadLines
+    d)generateRequiredLines
