@@ -1,0 +1,21 @@
+requirements :-
+
+1)single file
+  A) node tail.js fileName   
+  B) node tail.js -n 6 fileName  
+  C) node tail.js -6 fileName 
+
+2)standard inputs
+  D) node tail.js     
+  E) node tail.js -n 6   
+
+3)multiple files
+  F) node tail.js fileName1 fileName2 ...  
+  G) node tail.js -n 6 fileName1 fileName2 ... 
+  H) node tail.js -6 fileName1 fileName2 ... 
+
+4)piping (input from other)
+  I) cat fileName | node tail.js   
+  J) cat fileName | node tail.js -n 6  
+
+---planning done----
