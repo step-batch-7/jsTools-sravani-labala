@@ -1,4 +1,4 @@
-node tail.js ./appTests/testingFiles/goodFile.txt
+node tail.js ./appTests/testingFiles/fileWithMoreLines.txt
 6
 7
 8

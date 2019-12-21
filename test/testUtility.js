@@ -26,7 +26,7 @@ describe("parseUserOptions", function() {
 describe("loadLines", function() {
   it("should load the last ten lines by default", function() {
     const parsedLines = {
-      fileNames: ["./appTests/testingFiles/goodFile.txt"],
+      fileNames: ["./appTests/testingFiles/fileWithMoreLines.txt"],
       lines: 10
     };
     const expected = "6\n7\n8\n9\n10\n11\n12\n13\n14\n15";
