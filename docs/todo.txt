@@ -1,39 +1,39 @@
 requirements :-
+v0.1
+  node tail.js fileName   
+  node tail.js -n 6 fileName  
 
-1)single file
-  A) node tail.js fileName   
-  B) node tail.js -n 6 fileName  
-  C) node tail.js -6 fileName 
+v0.2
+  node tail.js     
+  node tail.js -n 6   
+  cat fileName | node tail.js   
+  cat fileName | node tail.js -n 6
 
-2)standard inputs
-  D) node tail.js     
-  E) node tail.js -n 6   
-
-3)multiple files
-  F) node tail.js fileName1 fileName2 ...  
-  G) node tail.js -n 6 fileName1 fileName2 ... 
-  H) node tail.js -6 fileName1 fileName2 ... 
-
-4)piping (input from other)
-  I) cat fileName | node tail.js   
-  J) cat fileName | node tail.js -n 6  
-
+v0.3 
+  node tail.js fileName1 fileName2 ...  
+  node tail.js -n 6 fileName1 fileName2 ... 
+ 
 ---planning done----
 
 ---------------------------
 implementation
 
-  create folders :- src , test
-  create files :- tail.js, utility.js, testUtility.js 
+  create folders :- src , test --done--
+  create files :- tail.js, utility.js, testUtility.js --done--
   make connections :-
-    to main file and utility.js
-    to test file and src file
-  make sure that mocha runs
-
+    to main file and utility.js --done--
+    to test file and src file --done--
+  make sure that mocha runs --done--
+  make sure that main runs --done--
+  write the app tests --done--
+---------------------------
 v0.1
   A)node tail.js goodFile
-
-    a)parseUserOptions
-    b)readFilePath
-    c)loadLines
-    d)generateRequiredLines
+    v0.1.0 
+      a)parseUserOptions --done--
+      b)loadLines --done--
+      c)generateRequiredLines --done--
+    v0.1.1
+      a)parseUserOptions --done--
+      b)loadLines --done--
+      c)generateErrorMessage --done--
