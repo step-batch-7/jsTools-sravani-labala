@@ -27,13 +27,24 @@ implementation
   make sure that main runs --done--
   write the app tests --done--
 ---------------------------
-v0.1
-  A)node tail.js goodFile
-    v0.1.0 
+v0.1.0
+  node tail.js goodFile
+    v0.1.0.1 
       a)parseUserOptions --done--
       b)loadLines --done--
       c)generateRequiredLines --done--
-    v0.1.1
+  node tail.js badFile
+    v0.1.0.2
       a)parseUserOptions --done--
       b)loadLines --done--
       c)generateErrorMessage --done--
+v0.1.1
+  node tail.js -n 6 goodFile
+    v0.1.1.0
+      a)parseUserOptions
+      b)loadLines
+      c)generateRequiredLines
+    v0.1.1.1
+    a)parseUserOptions
+    b)loadLines
+    c)generateErrorMessage
