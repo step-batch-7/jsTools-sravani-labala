@@ -25,20 +25,37 @@ describe("parseUserOptions", function() {
 
 describe("loadLines", function() {
   it("should load the last ten lines by default", function() {
+    const isFileExist = function(path) {
+      assert.strictEqual(path, "./appTests/testingFiles/fileWithMoreLines.txt");
+      return true;
+    };
+    const reader = function(path, encoding) {
+      assert.strictEqual(path, "./appTests/testingFiles/fileWithMoreLines.txt");
+      assert.strictEqual(encoding, "utf8");
+      return "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15";
+    };
     const parsedLines = {
       fileNames: ["./appTests/testingFiles/fileWithMoreLines.txt"],
       lines: 10
     };
     const expected = "6\n7\n8\n9\n10\n11\n12\n13\n14\n15";
-    assert.deepStrictEqual(loadLines(parsedLines), expected);
+    const encoding = "utf8";
+    assert.deepStrictEqual(
+      loadLines(parsedLines, isFileExist, reader, encoding),
+      expected
+    );
   });
   it("should give the array of wrong file path or names", function() {
+    const isFileExist = function(path) {
+      assert.strictEqual(path, "wrongFile");
+      return false;
+    };
     const parsedLines = {
       fileNames: ["wrongFile"],
       lines: 10
     };
     const expected = `tail: wrongFile: no such file or directory`;
-    assert.deepStrictEqual(loadLines(parsedLines), expected);
+    assert.deepStrictEqual(loadLines(parsedLines, isFileExist), expected);
   });
 });
 
