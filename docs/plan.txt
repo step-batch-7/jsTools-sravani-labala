@@ -248,3 +248,73 @@ input: array of strings: commandLineArgs
 name : filterUserOptions
 
 -------------------------------------------------
+
+-------------process flow--------------   
+
+[1a]    //if the file exists
+output: lines of text: tailLines
+  //last required number of lines
+
+input: array of content: lines
+  [lines,[[file1],[file2]]] or
+  [lines,[content]]
+
+name: generateRequiredLines
+
+[1b]    //if the file doesn't exist or the number of lines is not given but option is specified
+output: lines of text: error message
+  tail: fileName: no such file or directory (or)
+  tail: illegal offset -- fileName
+
+input: text: filePath
+  [fileName...]
+
+name: generateErrorMessage
+
+[2a]
+output: array of content: lines (or)  array of files: error files
+  [lines,[[file1],[file2]]] or
+  [filenames...]  // error files
+
+input: object :{filePath:[],lines:number}
+  {fileName:['fileName','fileName2'...],lines: lines}
+
+name: loadLines
+
+
+[2b]
+output: array of content: lines
+  [lines,[content]]  // lines can be default 10 or the user required lines
+
+input: text: content
+  //content from previous output or through the standard input
+
+name: getContent
+
+[3]
+output: either goes to getContent or the loadLines
+
+
+input: object :{filePath:[],lines:number}
+  {fileName:['fileName1','fileName2'...],lines: lines}
+
+name: handleOperation
+
+[4]
+output: object :{filePath:[],lines:number}
+  {fileName:['fileName1','fileName2'...],lines: lines} // lines can be default 10 or the user required lines
+  
+input: array of strings: commandLineArgs
+  ['node','tail.js','fileName'] or  
+  ['node','tail.js','6','fileName'] or 
+  ['node','tail.js','-n','6','fileName'] or
+  ['node','tail.js','fileName1','fileName2'...] or
+  ['node','tail.js','-n','6','fileName1','fileName2'...] or
+  ['node','tail.js','6','fileName1','fileName2'...] or
+
+  ['node','tail.js'] or  
+  ['node','tail.js','-n','6']
+
+name : parseUserOptions
+
+-------------------------------------------------

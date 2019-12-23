@@ -30,25 +30,39 @@ implementation
 
 -------version 0.1------------
 v0.1.0
-  node tail.js goodFile
-    v0.1.0.1 
+  v0.1.0.1 
+    node tail.js goodFile
       a)parseUserOptions --done--
       b)loadLines --done--
       c)generateRequiredLines --done--
-  node tail.js badFile
-    v0.1.0.2
+
+  v0.1.0.2
+    node tail.js badFile
       a)parseUserOptions --done--
       b)loadLines --done--
       c)generateErrorMessage --done--
+
 v0.1.1
-  node tail.js -n 6 goodFile
-    v0.1.1.0
+  v0.1.1.0
+    node tail.js -n 6 goodFile
       a)parseUserOptions --done--
-      b)loadLines --done--
-      c)generateRequiredLines --done--
-    v0.1.1.1
+      b)handleOperation --done--
+      c)loadLines --done--
+      d)generateRequiredLines --done--
+
+  v0.1.1.1
+    node tail.js -n 6 badFile
     a)parseUserOptions --done--
-    b)loadLines --done--
-    c)generateErrorMessage --done--
+    b)handleOperation --done--
+    c)loadLines --done--
+    d)generateErrorMessage --done--
   
 ------version 0.1 completed--------
+
+-------version 0.2----------
+v0.2.0
+  node tail.js
+    a)parseUserOptions
+    b)handleOperation
+    c)getContent
+    d)generateRequiredLines

@@ -8,4 +8,11 @@ const reader = function(path, encoding) {
   return fs.readFileSync(path, encoding);
 };
 
-module.exports = { isFileExist, reader };
+const error = function(message) {
+  console.error(message);
+};
+
+const output = function(message) {
+  console.log(message);
+};
+module.exports = { isFileExist, reader, error, output };
