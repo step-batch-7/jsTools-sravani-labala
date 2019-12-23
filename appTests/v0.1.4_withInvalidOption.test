@@ -1,0 +1,2 @@
+node tail.js -n goodFile
+tail: illegal offset -- goodFile

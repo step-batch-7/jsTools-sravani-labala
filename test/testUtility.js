@@ -1,39 +1,51 @@
 const assert = require("chai").assert;
 const {
   parseUserArguments,
-  loadLines,
-  generateRequiredLines,
+  loadLinesFromFile,
+  getRequiredLines,
   generateErrorMessage,
-  handleOperation
+  handleSubOperations
 } = require("./../src/utility");
 
 describe("parseUserArguments", function() {
   it("should parse fileName and the default lines as 10 if number of lines is not mentioned", function() {
     const commandLineArgs = ["node", "tail.js", "goodFile"];
     assert.deepStrictEqual(parseUserArguments(commandLineArgs), {
-      fileNames: ["goodFile"],
-      lines: 10
+      parsedUserInputs: {
+        fileNames: ["goodFile"],
+        lines: 10
+      },
+      valid: true
     });
   });
   it("should parse fileName and the number of lines are given in the command line args with space in between", function() {
     const commandLineArgs = ["node", "tail.js", "-n", "5", "goodFile"];
     assert.deepStrictEqual(parseUserArguments(commandLineArgs), {
-      fileNames: ["goodFile"],
-      lines: 5
+      parsedUserInputs: {
+        fileNames: ["goodFile"],
+        lines: 5
+      },
+      valid: true
     });
   });
   it("should parse fileName and the number of lines given in the command line args without space", function() {
     const commandLineArgs = ["node", "tail.js", "-n5", "goodFile"];
     assert.deepStrictEqual(parseUserArguments(commandLineArgs), {
-      fileNames: ["goodFile"],
-      lines: 5
+      parsedUserInputs: {
+        fileNames: ["goodFile"],
+        lines: 5
+      },
+      valid: true
     });
   });
   it("should parse fileName and the number of lines when only count of lines is mentioned without any option", function() {
     const commandLineArgs = ["node", "tail.js", "-5", "goodFile"];
     assert.deepStrictEqual(parseUserArguments(commandLineArgs), {
-      fileNames: ["goodFile"],
-      lines: 5
+      parsedUserInputs: {
+        fileNames: ["goodFile"],
+        lines: 5
+      },
+      valid: true
     });
   });
   it("should give error message when only option is mentioned without the count but has the file name", function() {
@@ -42,11 +54,13 @@ describe("parseUserArguments", function() {
       assert.strictEqual(message, "tail: illegal offset -- goodFile");
       return;
     };
-    assert.isUndefined(parseUserArguments(commandLineArgs, error));
+    assert.deepStrictEqual(parseUserArguments(commandLineArgs, error), {
+      valid: false
+    });
   });
 });
 
-describe("loadLines", function() {
+describe("loadLinesFromFile", function() {
   it("should load the last ten lines by default", function() {
     const isFileExist = function(path) {
       assert.strictEqual(path, "./appTests/testingFiles/fileWithMoreLines.txt");
@@ -71,7 +85,7 @@ describe("loadLines", function() {
     };
     const encoding = "utf8";
     assert.isUndefined(
-      loadLines(parsedUserInputs, {
+      loadLinesFromFile(parsedUserInputs, {
         isFileExist,
         reader,
         error,
@@ -102,7 +116,7 @@ describe("loadLines", function() {
     };
     const encoding = "utf8";
     assert.isUndefined(
-      loadLines(parsedUserInputs, {
+      loadLinesFromFile(parsedUserInputs, {
         isFileExist,
         reader,
         error,
@@ -113,7 +127,7 @@ describe("loadLines", function() {
   });
 });
 
-describe("generateRequiredLines", function() {
+describe("getRequiredLines", function() {
   it("should give the required number of lines of the file content", function() {
     const fileContent = [
       10,
@@ -123,7 +137,7 @@ describe("generateRequiredLines", function() {
       assert.strictEqual(message, "6\n7\n8\n9\n10\n11\n12\n13\n14\n15");
       return;
     };
-    assert.isUndefined(generateRequiredLines(fileContent, output));
+    assert.isUndefined(getRequiredLines(fileContent, output));
   });
 });
 
@@ -138,7 +152,7 @@ describe("generateErrorMessage", function() {
   });
 });
 
-describe("handleOperation", function() {
+describe("handleSubOperations", function() {
   it("should give the required lines of the file if the file name is mentioned and if it exists", function() {
     const isFileExist = function(path) {
       assert.strictEqual(path, "./appTests/testingFiles/fileWithMoreLines.txt");
@@ -163,7 +177,7 @@ describe("handleOperation", function() {
     };
     const encoding = "utf8";
     assert.isUndefined(
-      handleOperation(parsedUserInputs, {
+      handleSubOperations(true, parsedUserInputs, {
         isFileExist,
         reader,
         encoding,
@@ -175,8 +189,11 @@ describe("handleOperation", function() {
   it("should give 'waiting for standard input' if the file names are not mentioned", function() {
     const parsedUserInputs = { fileNames: [], lines: 10 };
     assert.strictEqual(
-      handleOperation(parsedUserInputs),
+      handleSubOperations(true, parsedUserInputs),
       "waiting for standard input"
     );
+  });
+  it("should give nothing if the inputs are not valid", function() {
+    assert.isUndefined(handleSubOperations(false));
   });
 });

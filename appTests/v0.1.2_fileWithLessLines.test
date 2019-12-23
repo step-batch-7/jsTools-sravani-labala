@@ -1,0 +1,6 @@
+node tail.js -n5 ./appTests/testingFiles/fileWithLesserLines.txt
+1
+2
+3
+4
+5
