@@ -43,13 +43,19 @@ describe("loadLines", function() {
       assert.strictEqual(encoding, "utf8");
       return "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15";
     };
-    const parsedLines = {
+    const parsedUserInputs = {
       fileNames: ["./appTests/testingFiles/fileWithMoreLines.txt"],
       lines: 10
     };
     const encoding = "utf8";
     assert.isUndefined(
-      loadLines(parsedLines, isFileExist, reader, encoding, error, output)
+      loadLines(parsedUserInputs, {
+        isFileExist,
+        reader,
+        error,
+        encoding,
+        output
+      })
     );
   });
   it("should give the array of wrong file path or names", function() {
@@ -57,7 +63,7 @@ describe("loadLines", function() {
       assert.strictEqual(path, "wrongFile");
       return false;
     };
-    const parsedLines = {
+    const parsedUserInputs = {
       fileNames: ["wrongFile"],
       lines: 10
     };
@@ -74,7 +80,13 @@ describe("loadLines", function() {
     };
     const encoding = "utf8";
     assert.isUndefined(
-      loadLines(parsedLines, isFileExist, reader, encoding, error, output)
+      loadLines(parsedUserInputs, {
+        isFileExist,
+        reader,
+        error,
+        encoding,
+        output
+      })
     );
   });
 });
@@ -115,7 +127,7 @@ describe("handleOperation", function() {
       assert.strictEqual(encoding, "utf8");
       return "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15";
     };
-    const parsedLines = {
+    const parsedUserInputs = {
       fileNames: ["./appTests/testingFiles/fileWithMoreLines.txt"],
       lines: 10
     };
@@ -129,12 +141,19 @@ describe("handleOperation", function() {
     };
     const encoding = "utf8";
     assert.isUndefined(
-      handleOperation(parsedLines, isFileExist, reader, encoding, error, output)
+      handleOperation(parsedUserInputs, {
+        isFileExist,
+        reader,
+        encoding,
+        error,
+        output
+      })
     );
   });
   it("should give 'waiting for standard input' if the file names are not mentioned", function() {
+    const parsedUserInputs = { fileNames: [], lines: 10 };
     assert.strictEqual(
-      handleOperation({ fileNames: [], lines: 10 }),
+      handleOperation(parsedUserInputs),
       "waiting for standard input"
     );
   });

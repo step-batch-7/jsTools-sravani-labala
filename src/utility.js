@@ -10,42 +10,22 @@ const generateRequiredLines = function(fileContent, output) {
   output(content.reverse().join("\n"));
 };
 
-const loadLines = function(
-  parsedUserInputs,
-  isFileExist,
-  reader,
-  encoding,
-  error,
-  output
-) {
+const loadLines = function(parsedUserInputs, helperFunctions) {
+  const { isFileExist, reader, encoding } = helperFunctions;
   let fileContent = [parsedUserInputs.lines];
   const fileName = parsedUserInputs.fileNames[0];
   if (!isFileExist(fileName)) {
-    return generateErrorMessage([fileName], error);
+    return generateErrorMessage([fileName], helperFunctions.error);
   }
   let content = reader(fileName, encoding);
   fileContent.push([content]);
-  return generateRequiredLines(fileContent, output);
+  return generateRequiredLines(fileContent, helperFunctions.output);
 };
 
-const handleOperation = function(
-  parsedUserInputs,
-  isFileExist,
-  reader,
-  encoding,
-  error,
-  output
-) {
+const handleOperation = function(parsedUserInputs, helperFunctions) {
   if (parsedUserInputs.fileNames.length == 0)
     return "waiting for standard input";
-  return loadLines(
-    parsedUserInputs,
-    isFileExist,
-    reader,
-    encoding,
-    error,
-    output
-  );
+  return loadLines(parsedUserInputs, helperFunctions);
 };
 
 const parseUserOptions = function(commandLineArgs) {
