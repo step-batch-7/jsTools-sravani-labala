@@ -1,26 +1,48 @@
 const assert = require("chai").assert;
 const {
-  parseUserOptions,
+  parseUserArguments,
   loadLines,
   generateRequiredLines,
   generateErrorMessage,
   handleOperation
 } = require("./../src/utility");
 
-describe("parseUserOptions", function() {
+describe("parseUserArguments", function() {
   it("should parse fileName and the default lines as 10 if number of lines is not mentioned", function() {
     const commandLineArgs = ["node", "tail.js", "goodFile"];
-    assert.deepStrictEqual(parseUserOptions(commandLineArgs), {
+    assert.deepStrictEqual(parseUserArguments(commandLineArgs), {
       fileNames: ["goodFile"],
       lines: 10
     });
   });
-  it("should parse fileName and the number of lines given in the command line args", function() {
+  it("should parse fileName and the number of lines are given in the command line args with space in between", function() {
     const commandLineArgs = ["node", "tail.js", "-n", "5", "goodFile"];
-    assert.deepStrictEqual(parseUserOptions(commandLineArgs), {
+    assert.deepStrictEqual(parseUserArguments(commandLineArgs), {
       fileNames: ["goodFile"],
-      lines: "5"
+      lines: 5
     });
+  });
+  it("should parse fileName and the number of lines given in the command line args without space", function() {
+    const commandLineArgs = ["node", "tail.js", "-n5", "goodFile"];
+    assert.deepStrictEqual(parseUserArguments(commandLineArgs), {
+      fileNames: ["goodFile"],
+      lines: 5
+    });
+  });
+  it("should parse fileName and the number of lines when only count of lines is mentioned without any option", function() {
+    const commandLineArgs = ["node", "tail.js", "-5", "goodFile"];
+    assert.deepStrictEqual(parseUserArguments(commandLineArgs), {
+      fileNames: ["goodFile"],
+      lines: 5
+    });
+  });
+  it("should give error message when only option is mentioned without the count but has the file name", function() {
+    const commandLineArgs = ["node", "tail.js", "-n", "goodFile"];
+    const error = function(message) {
+      assert.strictEqual(message, "tail: illegal offset -- goodFile");
+      return;
+    };
+    assert.isUndefined(parseUserArguments(commandLineArgs, error));
   });
 });
 

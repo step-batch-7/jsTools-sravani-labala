@@ -28,19 +28,33 @@ const handleOperation = function(parsedUserInputs, helperFunctions) {
   return loadLines(parsedUserInputs, helperFunctions);
 };
 
-const parseUserOptions = function(commandLineArgs) {
+const parseUserArguments = function(commandLineArgs, error) {
   let parsedUserInputs = { lines: 10 };
   let userArgs = commandLineArgs.slice(2);
-  if (userArgs.includes("-n")) {
-    parsedUserInputs.lines = userArgs[userArgs.indexOf("-n") + 1];
-    userArgs = userArgs.slice(2);
+  let optionOrFile = userArgs[0].split("");
+  if (optionOrFile.includes("-")) {
+    if (optionOrFile[1] != "n" && +optionOrFile[1] > 0) {
+      parsedUserInputs.lines = +optionOrFile[1];
+      userArgs = userArgs.slice(1);
+    }
+    if (optionOrFile[1] == "n" && optionOrFile.length == 3) {
+      parsedUserInputs.lines = +optionOrFile[2];
+      userArgs = userArgs.slice(1);
+    }
+    if (userArgs[1] != undefined && Number.isNaN(+userArgs[1])) {
+      return error(`tail: illegal offset -- ${userArgs[1]}`);
+    }
+    if (+userArgs[1] >= 0) {
+      parsedUserInputs.lines = +userArgs[1];
+      userArgs = userArgs.slice(2);
+    }
   }
   parsedUserInputs["fileNames"] = userArgs;
   return parsedUserInputs;
 };
 
 module.exports = {
-  parseUserOptions,
+  parseUserArguments,
   loadLines,
   generateRequiredLines,
   generateErrorMessage,
