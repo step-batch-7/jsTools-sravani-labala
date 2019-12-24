@@ -5,7 +5,7 @@ const {
   getRequiredLines,
   generateErrorMessage,
   handleSubOperations
-} = require("./../src/utility");
+} = require("../src/tailLib.js");
 
 describe("parseUserArguments", function() {
   it("should parse fileName and the default lines as 10 if number of lines is not mentioned", function() {
@@ -28,34 +28,11 @@ describe("parseUserArguments", function() {
       valid: true
     });
   });
-  it("should parse fileName and the number of lines given in the command line args without space", function() {
-    const commandLineArgs = ["node", "tail.js", "-n5", "goodFile"];
-    assert.deepStrictEqual(parseUserArguments(commandLineArgs), {
-      parsedUserInputs: {
-        fileNames: ["goodFile"],
-        lines: 5
-      },
-      valid: true
-    });
-  });
-  it("should parse fileName and the number of lines when only count of lines is mentioned without any option", function() {
-    const commandLineArgs = ["node", "tail.js", "-5", "goodFile"];
-    assert.deepStrictEqual(parseUserArguments(commandLineArgs), {
-      parsedUserInputs: {
-        fileNames: ["goodFile"],
-        lines: 5
-      },
-      valid: true
-    });
-  });
   it("should give error message when only option is mentioned without the count but has the file name", function() {
     const commandLineArgs = ["node", "tail.js", "-n", "goodFile"];
-    const error = function(message) {
-      assert.strictEqual(message, "tail: illegal offset -- goodFile");
-      return;
-    };
-    assert.deepStrictEqual(parseUserArguments(commandLineArgs, error), {
-      valid: false
+    assert.deepStrictEqual(parseUserArguments(commandLineArgs), {
+      valid: false,
+      inputError: "tail: illegal offset -- goodFile"
     });
   });
 });
@@ -65,14 +42,6 @@ describe("loadLinesFromFile", function() {
     const isFileExist = function(path) {
       assert.strictEqual(path, "./appTests/testingFiles/fileWithMoreLines.txt");
       return true;
-    };
-    const output = function(message) {
-      assert.strictEqual(message, "6\n7\n8\n9\n10\n11\n12\n13\n14\n15");
-      return;
-    };
-    const error = function(message) {
-      assert.strictEqual(message, null);
-      return;
     };
     const reader = function(path, encoding) {
       assert.strictEqual(path, "./appTests/testingFiles/fileWithMoreLines.txt");
@@ -84,14 +53,9 @@ describe("loadLinesFromFile", function() {
       lines: 10
     };
     const encoding = "utf8";
-    assert.isUndefined(
-      loadLinesFromFile(parsedUserInputs, {
-        isFileExist,
-        reader,
-        error,
-        encoding,
-        output
-      })
+    assert.strictEqual(
+      loadLinesFromFile(parsedUserInputs, { reader, isFileExist, encoding }),
+      "6\n7\n8\n9\n10\n11\n12\n13\n14\n15"
     );
   });
   it("should give the array of wrong file path or names", function() {
@@ -103,26 +67,13 @@ describe("loadLinesFromFile", function() {
       fileNames: ["wrongFile"],
       lines: 10
     };
-    const output = function(message) {
-      assert.strictEqual(message, null);
-      return;
-    };
-    const error = function(message) {
-      assert.strictEqual(message, "tail: wrongFile: no such file or directory");
-      return;
-    };
     const reader = function() {
       return;
     };
     const encoding = "utf8";
-    assert.isUndefined(
-      loadLinesFromFile(parsedUserInputs, {
-        isFileExist,
-        reader,
-        error,
-        encoding,
-        output
-      })
+    assert.strictEqual(
+      loadLinesFromFile(parsedUserInputs, { isFileExist, reader, encoding }),
+      "tail: wrongFile: no such file or directory"
     );
   });
 });
@@ -133,22 +84,20 @@ describe("getRequiredLines", function() {
       10,
       ["1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15"]
     ];
-    const output = function(message) {
-      assert.strictEqual(message, "6\n7\n8\n9\n10\n11\n12\n13\n14\n15");
-      return;
-    };
-    assert.isUndefined(getRequiredLines(fileContent, output));
+    assert.strictEqual(
+      getRequiredLines(fileContent),
+      "6\n7\n8\n9\n10\n11\n12\n13\n14\n15"
+    );
   });
 });
 
 describe("generateErrorMessage", function() {
   it("should give the error message along with the file name", function() {
     const fileName = ["wrongFile"];
-    const error = function(message) {
-      assert.strictEqual(message, "tail: wrongFile: no such file or directory");
-      return;
-    };
-    assert.isUndefined(generateErrorMessage(fileName, error));
+    assert.strictEqual(
+      generateErrorMessage(fileName),
+      "tail: wrongFile: no such file or directory"
+    );
   });
 });
 
@@ -167,23 +116,14 @@ describe("handleSubOperations", function() {
       fileNames: ["./appTests/testingFiles/fileWithMoreLines.txt"],
       lines: 10
     };
-    const output = function(message) {
-      assert.strictEqual(message, "6\n7\n8\n9\n10\n11\n12\n13\n14\n15");
-      return;
-    };
-    const error = function(message) {
-      assert.strictEqual(message, null);
-      return;
-    };
     const encoding = "utf8";
-    assert.isUndefined(
+    assert.deepStrictEqual(
       handleSubOperations(true, parsedUserInputs, {
         isFileExist,
         reader,
-        encoding,
-        error,
-        output
-      })
+        encoding
+      }),
+      { message: "6\n7\n8\n9\n10\n11\n12\n13\n14\n15" }
     );
   });
   it("should give 'waiting for standard input' if the file names are not mentioned", function() {
@@ -194,6 +134,10 @@ describe("handleSubOperations", function() {
     );
   });
   it("should give nothing if the inputs are not valid", function() {
-    assert.isUndefined(handleSubOperations(false));
+    const error = "tail: illegal offset -- goodFile";
+    assert.deepStrictEqual(
+      handleSubOperations(false, parseUserArguments, {}, error),
+      { error: error }
+    );
   });
 });

@@ -4,8 +4,6 @@ const helperFunctions = function() {
   return {
     isFileExist: fs.existsSync,
     reader: fs.readFileSync,
-    error: console.error,
-    output: console.log,
     encoding: "utf8"
   };
 };

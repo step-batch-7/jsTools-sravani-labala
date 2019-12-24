@@ -1,13 +1,19 @@
-const { parseUserArguments, handleSubOperations } = require("./src/utility");
+const { parseUserArguments, handleSubOperations } = require("./src/tailLib.js");
 const { helperFunctions } = require("./src/config");
 
 const main = function() {
   const commandLineArgs = process.argv;
-  const { parsedUserInputs, valid } = parseUserArguments(
-    commandLineArgs,
-    helperFunctions().error
+  let { parsedUserInputs, valid, inputError } = parseUserArguments(
+    commandLineArgs
   );
-  handleSubOperations(valid, parsedUserInputs, helperFunctions());
+  let { error, message } = handleSubOperations(
+    valid,
+    parsedUserInputs,
+    helperFunctions(),
+    inputError
+  );
+  error && console.error(error);
+  message && console.log(message);
 };
 
 main();

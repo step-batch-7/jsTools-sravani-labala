@@ -7,8 +7,6 @@ describe("helperFunctions", function() {
     assert.deepStrictEqual(helperFunctions(), {
       isFileExist: fs.existsSync,
       reader: fs.readFileSync,
-      error: console.error,
-      output: console.log,
       encoding: "utf8"
     });
   });
