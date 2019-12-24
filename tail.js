@@ -13,8 +13,8 @@ const main = function() {
     { existsSync, readFileSync, encoding: "utf8" },
     inputError
   );
-  error && stderr.write(error);
-  message && stdout.write(message);
+  stderr.write(error);
+  stdout.write(message);
 };
 
 main();

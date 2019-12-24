@@ -59,7 +59,7 @@ describe("loadLinesFromFile", function() {
         existsSync,
         encoding
       }),
-      { message: "6\n7\n8\n9\n10\n11\n12\n13\n14\n15" }
+      { message: "6\n7\n8\n9\n10\n11\n12\n13\n14\n15", error: "" }
     );
   });
   it("should give the array of wrong file path or names", function() {
@@ -81,7 +81,7 @@ describe("loadLinesFromFile", function() {
         readFileSync,
         encoding
       }),
-      { error: "tail: wrongFile: no such file or directory" }
+      { error: "tail: wrongFile: no such file or directory", message: "" }
     );
   });
 });
@@ -131,7 +131,7 @@ describe("handleSubOperations", function() {
         readFileSync,
         encoding
       }),
-      { message: "6\n7\n8\n9\n10\n11\n12\n13\n14\n15" }
+      { message: "6\n7\n8\n9\n10\n11\n12\n13\n14\n15", error: "" }
     );
   });
   it("should give 'waiting for standard input' if the file names are not mentioned", function() {
@@ -145,7 +145,7 @@ describe("handleSubOperations", function() {
     const error = "tail: illegal offset -- goodFile";
     assert.deepStrictEqual(
       handleSubOperations(false, parseArguments, {}, error),
-      { error: error }
+      { error: error, message: "" }
     );
   });
 });

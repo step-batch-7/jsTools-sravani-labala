@@ -68,4 +68,8 @@ v0.1.2
     b)handleOperation --done--
     c)loadLines --done--
     d)generateErrorMessage --done--
-  
+
+fixed the bugs
+-----------------------
+bugs:
+    logic in main (tail.js)
