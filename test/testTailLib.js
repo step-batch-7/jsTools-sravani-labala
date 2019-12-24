@@ -15,7 +15,7 @@ describe("parseArguments", function() {
         fileNames: ["goodFile"],
         lines: 10
       },
-      valid: true
+      isInputsValid: true
     });
   });
   it("should parse fileName and the number of lines are given in the command line args with space in between", function() {
@@ -25,13 +25,13 @@ describe("parseArguments", function() {
         fileNames: ["goodFile"],
         lines: 5
       },
-      valid: true
+      isInputsValid: true
     });
   });
   it("should give error message when only option is mentioned without the count but has the file name", function() {
     const commandLineArgs = ["node", "tail.js", "-n", "goodFile"];
     assert.deepStrictEqual(parseArguments(commandLineArgs), {
-      valid: false,
+      isInputsValid: false,
       inputError: "tail: illegal offset -- goodFile"
     });
   });
@@ -39,11 +39,11 @@ describe("parseArguments", function() {
 
 describe("loadLinesFromFile", function() {
   it("should load the last ten lines by default", function() {
-    const isFileExist = function(path) {
+    const existsSync = function(path) {
       assert.strictEqual(path, "./appTests/testingFiles/fileWithMoreLines.txt");
       return true;
     };
-    const reader = function(path, encoding) {
+    const readFileSync = function(path, encoding) {
       assert.strictEqual(path, "./appTests/testingFiles/fileWithMoreLines.txt");
       assert.strictEqual(encoding, "utf8");
       return "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15";
@@ -54,12 +54,16 @@ describe("loadLinesFromFile", function() {
     };
     const encoding = "utf8";
     assert.deepStrictEqual(
-      loadLinesFromFile(parsedUserInputs, { reader, isFileExist, encoding }),
+      loadLinesFromFile(parsedUserInputs, {
+        readFileSync,
+        existsSync,
+        encoding
+      }),
       { message: "6\n7\n8\n9\n10\n11\n12\n13\n14\n15" }
     );
   });
   it("should give the array of wrong file path or names", function() {
-    const isFileExist = function(path) {
+    const existsSync = function(path) {
       assert.strictEqual(path, "wrongFile");
       return false;
     };
@@ -67,12 +71,16 @@ describe("loadLinesFromFile", function() {
       fileNames: ["wrongFile"],
       lines: 10
     };
-    const reader = function() {
+    const readFileSync = function() {
       return;
     };
     const encoding = "utf8";
     assert.deepStrictEqual(
-      loadLinesFromFile(parsedUserInputs, { isFileExist, reader, encoding }),
+      loadLinesFromFile(parsedUserInputs, {
+        existsSync,
+        readFileSync,
+        encoding
+      }),
       { error: "tail: wrongFile: no such file or directory" }
     );
   });
@@ -103,11 +111,11 @@ describe("generateErrorMessage", function() {
 
 describe("handleSubOperations", function() {
   it("should give the required lines of the file if the file name is mentioned and if it exists", function() {
-    const isFileExist = function(path) {
+    const existsSync = function(path) {
       assert.strictEqual(path, "./appTests/testingFiles/fileWithMoreLines.txt");
       return true;
     };
-    const reader = function(path, encoding) {
+    const readFileSync = function(path, encoding) {
       assert.strictEqual(path, "./appTests/testingFiles/fileWithMoreLines.txt");
       assert.strictEqual(encoding, "utf8");
       return "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15";
@@ -119,8 +127,8 @@ describe("handleSubOperations", function() {
     const encoding = "utf8";
     assert.deepStrictEqual(
       handleSubOperations(true, parsedUserInputs, {
-        isFileExist,
-        reader,
+        existsSync,
+        readFileSync,
         encoding
       }),
       { message: "6\n7\n8\n9\n10\n11\n12\n13\n14\n15" }
@@ -133,7 +141,7 @@ describe("handleSubOperations", function() {
       "waiting for standard input"
     );
   });
-  it("should give nothing if the inputs are not valid", function() {
+  it("should give nothing if the inputs are not isInputsValid", function() {
     const error = "tail: illegal offset -- goodFile";
     assert.deepStrictEqual(
       handleSubOperations(false, parseArguments, {}, error),

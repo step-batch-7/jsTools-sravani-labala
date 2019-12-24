@@ -9,19 +9,24 @@ const getRequiredLines = function(linesAndContent) {
 };
 
 const loadLinesFromFile = function(parsedUserInputs, fsTools) {
-  const { isFileExist, reader, encoding } = fsTools;
+  const { existsSync, readFileSync, encoding } = fsTools;
   let linesAndContent = [parsedUserInputs.lines];
   const fileName = parsedUserInputs.fileNames[0];
-  if (!isFileExist(fileName)) {
+  if (!existsSync(fileName)) {
     return { error: generateErrorMessage([fileName]) };
   }
-  const content = reader(fileName, encoding);
+  const content = readFileSync(fileName, encoding);
   linesAndContent.push([content]);
   return { message: getRequiredLines(linesAndContent) };
 };
 
-const handleSubOperations = function(valid, parsedUserInputs, fsTools, error) {
-  if (valid == false) return { error: error };
+const handleSubOperations = function(
+  isInputsValid,
+  parsedUserInputs,
+  fsTools,
+  error
+) {
+  if (isInputsValid == false) return { error: error };
   if (parsedUserInputs.fileNames.length == 0)
     return "waiting for standard input";
   return loadLinesFromFile(parsedUserInputs, fsTools);
@@ -32,14 +37,14 @@ const parseArguments = function(commandLineArgs) {
   let optionOrFiles = commandLineArgs.slice(2);
   if (optionOrFiles[0] == "-n" && !Number.isInteger(+optionOrFiles[1])) {
     const error = `tail: illegal offset -- ${optionOrFiles[1]}`;
-    return { valid: false, inputError: error };
+    return { isInputsValid: false, inputError: error };
   }
   if (optionOrFiles[0] == "-n") {
     parsedUserInputs.lines = Math.abs(+optionOrFiles[1]);
     optionOrFiles = optionOrFiles.slice(2);
   }
   parsedUserInputs["fileNames"] = optionOrFiles;
-  return { parsedUserInputs, valid: true };
+  return { parsedUserInputs, isInputsValid: true };
 };
 
 module.exports = {
