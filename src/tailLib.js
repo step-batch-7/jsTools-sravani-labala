@@ -30,7 +30,7 @@ const handleSubOperations = function(valid, parsedUserInputs, fsTools, error) {
 const parseArguments = function(commandLineArgs) {
   let parsedUserInputs = { lines: 10 };
   let optionOrFiles = commandLineArgs.slice(2);
-  if (optionOrFiles[0] == "-n" && Number.isNaN(+optionOrFiles[1])) {
+  if (optionOrFiles[0] == "-n" && !Number.isInteger(+optionOrFiles[1])) {
     const error = `tail: illegal offset -- ${optionOrFiles[1]}`;
     return { valid: false, inputError: error };
   }
