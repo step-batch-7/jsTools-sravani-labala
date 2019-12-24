@@ -7,7 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "alltests": "mocha && ./runAppTests.sh ./appTests/*.test"
   },
   "repository": {
     "type": "git",

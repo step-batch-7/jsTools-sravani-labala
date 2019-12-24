@@ -35,16 +35,16 @@ const handleSubOperations = function(
 
 const parseUserArguments = function(commandLineArgs) {
   let parsedUserInputs = { lines: 10 };
-  let userArgs = commandLineArgs.slice(2);
-  if (userArgs[0] == "-n" && Number.isNaN(+userArgs[1])) {
-    let error = `tail: illegal offset -- ${userArgs[1]}`;
+  let optionOrFiles = commandLineArgs.slice(2);
+  if (optionOrFiles[0] == "-n" && Number.isNaN(+optionOrFiles[1])) {
+    let error = `tail: illegal offset -- ${optionOrFiles[1]}`;
     return { valid: false, inputError: error };
   }
-  if (userArgs[0] == "-n" && Math.abs(+userArgs[1]) >= 0) {
-    parsedUserInputs.lines = Math.abs(+userArgs[1]);
-    userArgs = userArgs.slice(2);
+  if (optionOrFiles[0] == "-n") {
+    parsedUserInputs.lines = Math.abs(+optionOrFiles[1]);
+    optionOrFiles = optionOrFiles.slice(2);
   }
-  parsedUserInputs["fileNames"] = userArgs;
+  parsedUserInputs["fileNames"] = optionOrFiles;
   return { parsedUserInputs, valid: true };
 };
 

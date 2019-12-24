@@ -1,19 +1,25 @@
+const fs = require("fs");
+const { stderr, stdout } = process;
 const { parseUserArguments, handleSubOperations } = require("./src/tailLib.js");
-const { helperFunctions } = require("./src/config");
 
 const main = function() {
   const commandLineArgs = process.argv;
-  let { parsedUserInputs, valid, inputError } = parseUserArguments(
+  const helperFunctions = {
+    isFileExist: fs.existsSync,
+    reader: fs.readFileSync,
+    encoding: "utf8"
+  };
+  const { parsedUserInputs, valid, inputError } = parseUserArguments(
     commandLineArgs
   );
-  let { error, message } = handleSubOperations(
+  const { error, message } = handleSubOperations(
     valid,
     parsedUserInputs,
-    helperFunctions(),
+    helperFunctions,
     inputError
   );
-  error && console.error(error);
-  message && console.log(message);
+  error && stderr.write(error);
+  message && stdout.write(message);
 };
 
 main();

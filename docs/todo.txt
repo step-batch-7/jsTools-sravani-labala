@@ -25,7 +25,7 @@ implementation
     to test file and src file --done--
   make sure that mocha runs --done--
   make sure that main runs --done--
-  write the app tests --done--
+  app tests --done--
 ---------------------------
 
 -------version 0.1------------
