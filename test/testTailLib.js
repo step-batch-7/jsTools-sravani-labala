@@ -1,16 +1,16 @@
 const assert = require("chai").assert;
 const {
-  parseUserArguments,
+  parseArguments,
   loadLinesFromFile,
   getRequiredLines,
   generateErrorMessage,
   handleSubOperations
 } = require("../src/tailLib.js");
 
-describe("parseUserArguments", function() {
+describe("parseArguments", function() {
   it("should parse fileName and the default lines as 10 if number of lines is not mentioned", function() {
     const commandLineArgs = ["node", "tail.js", "goodFile"];
-    assert.deepStrictEqual(parseUserArguments(commandLineArgs), {
+    assert.deepStrictEqual(parseArguments(commandLineArgs), {
       parsedUserInputs: {
         fileNames: ["goodFile"],
         lines: 10
@@ -20,7 +20,7 @@ describe("parseUserArguments", function() {
   });
   it("should parse fileName and the number of lines are given in the command line args with space in between", function() {
     const commandLineArgs = ["node", "tail.js", "-n", "5", "goodFile"];
-    assert.deepStrictEqual(parseUserArguments(commandLineArgs), {
+    assert.deepStrictEqual(parseArguments(commandLineArgs), {
       parsedUserInputs: {
         fileNames: ["goodFile"],
         lines: 5
@@ -30,7 +30,7 @@ describe("parseUserArguments", function() {
   });
   it("should give error message when only option is mentioned without the count but has the file name", function() {
     const commandLineArgs = ["node", "tail.js", "-n", "goodFile"];
-    assert.deepStrictEqual(parseUserArguments(commandLineArgs), {
+    assert.deepStrictEqual(parseArguments(commandLineArgs), {
       valid: false,
       inputError: "tail: illegal offset -- goodFile"
     });
@@ -53,9 +53,9 @@ describe("loadLinesFromFile", function() {
       lines: 10
     };
     const encoding = "utf8";
-    assert.strictEqual(
+    assert.deepStrictEqual(
       loadLinesFromFile(parsedUserInputs, { reader, isFileExist, encoding }),
-      "6\n7\n8\n9\n10\n11\n12\n13\n14\n15"
+      { message: "6\n7\n8\n9\n10\n11\n12\n13\n14\n15" }
     );
   });
   it("should give the array of wrong file path or names", function() {
@@ -71,9 +71,9 @@ describe("loadLinesFromFile", function() {
       return;
     };
     const encoding = "utf8";
-    assert.strictEqual(
+    assert.deepStrictEqual(
       loadLinesFromFile(parsedUserInputs, { isFileExist, reader, encoding }),
-      "tail: wrongFile: no such file or directory"
+      { error: "tail: wrongFile: no such file or directory" }
     );
   });
 });
@@ -136,7 +136,7 @@ describe("handleSubOperations", function() {
   it("should give nothing if the inputs are not valid", function() {
     const error = "tail: illegal offset -- goodFile";
     assert.deepStrictEqual(
-      handleSubOperations(false, parseUserArguments, {}, error),
+      handleSubOperations(false, parseArguments, {}, error),
       { error: error }
     );
   });

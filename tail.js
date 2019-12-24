@@ -1,21 +1,21 @@
 const fs = require("fs");
 const { stderr, stdout } = process;
-const { parseUserArguments, handleSubOperations } = require("./src/tailLib.js");
+const { parseArguments, handleSubOperations } = require("./src/tailLib.js");
 
 const main = function() {
   const commandLineArgs = process.argv;
-  const helperFunctions = {
+  const fsTools = {
     isFileExist: fs.existsSync,
     reader: fs.readFileSync,
     encoding: "utf8"
   };
-  const { parsedUserInputs, valid, inputError } = parseUserArguments(
+  const { parsedUserInputs, valid, inputError } = parseArguments(
     commandLineArgs
   );
   const { error, message } = handleSubOperations(
     valid,
     parsedUserInputs,
-    helperFunctions,
+    fsTools,
     inputError
   );
   error && stderr.write(error);
