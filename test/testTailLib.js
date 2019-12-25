@@ -15,7 +15,7 @@ describe("parseArguments", function() {
         fileNames: ["goodFile"],
         lines: 10
       },
-      isInputsValid: true
+      error: ""
     });
   });
   it("should parse fileName and the number of lines are given in the command line args with space in between", function() {
@@ -25,14 +25,13 @@ describe("parseArguments", function() {
         fileNames: ["goodFile"],
         lines: 5
       },
-      isInputsValid: true
+      error: ""
     });
   });
   it("should give error message when only option is mentioned without the count but has the file name", function() {
     const commandLineArgs = ["node", "tail.js", "-n", "goodFile"];
     assert.deepStrictEqual(parseArguments(commandLineArgs), {
-      isInputsValid: false,
-      inputError: "tail: illegal offset -- goodFile"
+      error: "tail: illegal offset -- goodFile"
     });
   });
 });
@@ -40,25 +39,28 @@ describe("parseArguments", function() {
 describe("loadLinesFromFile", function() {
   it("should load the last ten lines by default", function() {
     const existsSync = function(path) {
-      assert.strictEqual(path, "./appTests/testingFiles/fileWithMoreLines.txt");
+      assert.strictEqual(path, "goodFile");
       return true;
     };
     const readFileSync = function(path, encoding) {
-      assert.strictEqual(path, "./appTests/testingFiles/fileWithMoreLines.txt");
+      assert.strictEqual(path, "goodFile");
       assert.strictEqual(encoding, "utf8");
       return "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15";
     };
     const parsedUserInputs = {
-      fileNames: ["./appTests/testingFiles/fileWithMoreLines.txt"],
+      fileNames: ["goodFile"],
       lines: 10
     };
     const encoding = "utf8";
     assert.deepStrictEqual(
-      loadLinesFromFile(parsedUserInputs, {
-        readFileSync,
-        existsSync,
+      loadLinesFromFile(
+        parsedUserInputs,
+        {
+          readFileSync,
+          existsSync
+        },
         encoding
-      }),
+      ),
       { message: "6\n7\n8\n9\n10\n11\n12\n13\n14\n15", error: "" }
     );
   });
@@ -112,40 +114,41 @@ describe("generateErrorMessage", function() {
 describe("handleSubOperations", function() {
   it("should give the required lines of the file if the file name is mentioned and if it exists", function() {
     const existsSync = function(path) {
-      assert.strictEqual(path, "./appTests/testingFiles/fileWithMoreLines.txt");
+      assert.strictEqual(path, "goodFile");
       return true;
     };
     const readFileSync = function(path, encoding) {
-      assert.strictEqual(path, "./appTests/testingFiles/fileWithMoreLines.txt");
+      assert.strictEqual(path, "goodFile");
       assert.strictEqual(encoding, "utf8");
       return "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15";
     };
-    const parsedUserInputs = {
-      fileNames: ["./appTests/testingFiles/fileWithMoreLines.txt"],
-      lines: 10
-    };
+    const commandLineArgs = ["node", "tail.js", "goodFile"];
     const encoding = "utf8";
     assert.deepStrictEqual(
-      handleSubOperations(true, parsedUserInputs, {
-        existsSync,
-        readFileSync,
+      handleSubOperations(
+        commandLineArgs,
+        {
+          existsSync,
+          readFileSync
+        },
         encoding
-      }),
+      ),
       { message: "6\n7\n8\n9\n10\n11\n12\n13\n14\n15", error: "" }
     );
   });
   it("should give 'waiting for standard input' if the file names are not mentioned", function() {
-    const parsedUserInputs = { fileNames: [], lines: 10 };
+    const commandLineArgs = ["node", "tail.js"];
     assert.strictEqual(
-      handleSubOperations(true, parsedUserInputs),
+      handleSubOperations(commandLineArgs),
       "waiting for standard input"
     );
   });
-  it("should give nothing if the inputs are not isInputsValid", function() {
+  it("should give error if the options are not valid", function() {
     const error = "tail: illegal offset -- goodFile";
-    assert.deepStrictEqual(
-      handleSubOperations(false, parseArguments, {}, error),
-      { error: error, message: "" }
-    );
+    const commandLineArgs = ["node", "tail.js", "-n", "goodFile"];
+    assert.deepStrictEqual(handleSubOperations(commandLineArgs), {
+      error: error,
+      message: ""
+    });
   });
 });

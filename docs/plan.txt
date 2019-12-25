@@ -244,6 +244,6 @@ input: array of strings: commandLineArgs
   ['node','tail.js'] or  
   ['node','tail.js','-n','6']
 
-name : parseUserOptions
+name : parseArguments
 
 -------------------------------------------------
