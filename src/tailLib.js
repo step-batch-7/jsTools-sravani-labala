@@ -1,23 +1,27 @@
-const generateErrorMessage = function(fileNames) {
-  return `tail: ${fileNames[0]}: no such file or directory`;
+const generateErrorMessage = function(fileName) {
+  return `tail: ${fileName}: no such file or directory`;
 };
 
-const getRequiredLines = function(linesAndContent) {
-  const lines = linesAndContent[0];
-  const content = linesAndContent[1][0].split("\n");
-  return content.slice(-lines).join("\n");
+const getRequiredLastLines = function(numberOfLinesAndContent) {
+  const { numberOfLines, content } = numberOfLinesAndContent;
+  const splittedContent = content[0].split("\n");
+  return splittedContent.slice(-numberOfLines).join("\n");
 };
 
 const loadLinesFromFile = function(parsedUserInputs, fs, encoding) {
   const { existsSync, readFileSync } = fs;
-  let linesAndContent = [parsedUserInputs.lines];
+  const numberOfLines = parsedUserInputs.lines;
+  let content = [];
   const fileName = parsedUserInputs.fileNames[0];
   if (!existsSync(fileName)) {
-    return { error: generateErrorMessage([fileName]), message: "" };
+    return { error: generateErrorMessage(fileName), message: "" };
   }
-  const content = readFileSync(fileName, encoding);
-  linesAndContent.push([content]);
-  return { message: getRequiredLines(linesAndContent), error: "" };
+  const fileContent = readFileSync(fileName, encoding);
+  content.push(fileContent);
+  return {
+    message: getRequiredLastLines({ numberOfLines, content }),
+    error: ""
+  };
 };
 
 const handleSubOperations = function(commandLineArgs, fs, encoding) {
@@ -46,7 +50,7 @@ const parseArguments = function(commandLineArgs) {
 module.exports = {
   parseArguments,
   loadLinesFromFile,
-  getRequiredLines,
+  getRequiredLastLines,
   generateErrorMessage,
   handleSubOperations
 };

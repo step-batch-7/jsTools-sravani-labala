@@ -2,7 +2,7 @@ const assert = require("chai").assert;
 const {
   parseArguments,
   loadLinesFromFile,
-  getRequiredLines,
+  getRequiredLastLines,
   generateErrorMessage,
   handleSubOperations
 } = require("../src/tailLib.js");
@@ -88,14 +88,14 @@ describe("loadLinesFromFile", function() {
   });
 });
 
-describe("getRequiredLines", function() {
+describe("getRequiredLastLines", function() {
   it("should give the required number of lines of the file content", function() {
-    const fileContent = [
-      10,
-      ["1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15"]
-    ];
+    const fileContent = {
+      numberOfLines: 10,
+      content: ["1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15"]
+    };
     assert.strictEqual(
-      getRequiredLines(fileContent),
+      getRequiredLastLines(fileContent),
       "6\n7\n8\n9\n10\n11\n12\n13\n14\n15"
     );
   });
