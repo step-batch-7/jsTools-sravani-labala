@@ -1,52 +1,40 @@
-const getRequiredLastLines = function(numberOfLines, content) {
-  const splittedContent = content[0].split("\n");
-  return splittedContent.slice(-numberOfLines).join("\n");
+const extractLines = function(numberOfLines, content) {
+  const splitContent = content.split("\n");
+  return splitContent.slice(-numberOfLines).join("\n");
 };
 
-const loadLinesFromFile = function(parsedUserInputs, fs, encoding) {
-  const { existsSync, readFileSync } = fs;
-  const numberOfLines = parsedUserInputs.lines;
-  const fileName = parsedUserInputs.fileNames[0];
-  if (!existsSync(fileName)) {
-    return {
-      error: `tail: ${fileName}: no such file or directory`,
-      message: ""
-    };
-  }
-  const fileContent = readFileSync(fileName, encoding);
-  let content = [fileContent];
-  return {
-    message: getRequiredLastLines(numberOfLines, content),
-    error: ""
-  };
-};
-
-const parseArguments = function(commandLineArgs) {
-  let parsedUserInputs = { lines: 10 };
-  let optionOrFiles = commandLineArgs.slice(2);
-  const isCountValid = Number.isInteger(+optionOrFiles[1]);
-  const isOptionValid = optionOrFiles[0] == "-n";
-  if (isOptionValid && !isCountValid) {
-    const error = `tail: illegal offset -- ${optionOrFiles[1]}`;
-    return { error: error };
-  }
+const parseOptions = function(commandLineArgs) {
+  let parsedArgs = { lines: 10, fileName: commandLineArgs[0] };
+  const isCountValid = Number.isInteger(+commandLineArgs[1]);
+  const isOptionValid = commandLineArgs[0] == "-n";
+  const inputError = `tail: illegal offset -- ${commandLineArgs[1]}`;
+  if (isOptionValid && !isCountValid) return { inputError };
   if (isOptionValid) {
-    parsedUserInputs.lines = Math.abs(+optionOrFiles[1]);
-    optionOrFiles = optionOrFiles.slice(2);
+    parsedArgs.lines = Math.abs(+commandLineArgs[1]);
+    parsedArgs.fileName = commandLineArgs[2];
   }
-  parsedUserInputs["fileNames"] = optionOrFiles;
-  return { parsedUserInputs, error: "" };
+  return { parsedArgs, inputError: "" };
 };
 
-const handleSubOperations = function(commandLineArgs, fs, encoding) {
-  const { error, parsedUserInputs } = parseArguments(commandLineArgs);
-  if (error) return { error: error, message: "" };
-  return loadLinesFromFile(parsedUserInputs, fs, encoding);
+const loadContent = function(fileName, fs, encoding) {
+  const { existsSync, readFileSync } = fs;
+  const error = `tail: ${fileName}: no such file or directory`;
+  if (!existsSync(fileName)) return { error, content: "" };
+  return { error: "", content: readFileSync(fileName, encoding) };
+};
+
+const tail = function(commandLineArgs, fs, encoding) {
+  const { inputError, parsedArgs } = parseOptions(commandLineArgs);
+  if (inputError) return { error: inputError, message: "" };
+  const fileName = parsedArgs.fileName;
+  const { error, content } = loadContent(fileName, fs, encoding);
+  if (error) return { error, message: "" };
+  return { message: extractLines(parsedArgs.lines, content), error: "" };
 };
 
 module.exports = {
-  parseArguments,
-  loadLinesFromFile,
-  getRequiredLastLines,
-  handleSubOperations
+  parseOptions,
+  loadContent,
+  extractLines,
+  tail
 };

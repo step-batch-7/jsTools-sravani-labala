@@ -1,11 +1,11 @@
 const fs = require("fs");
 const { stderr, stdout } = process;
-const { handleSubOperations } = require("./src/tailLib.js");
+const { tail } = require("./src/tailLib.js");
 
 const main = function() {
-  const commandLineArgs = process.argv;
+  const commandLineArgs = process.argv.slice(2);
   const encoding = "utf8";
-  const { error, message } = handleSubOperations(commandLineArgs, fs, encoding);
+  const { error, message } = tail(commandLineArgs, fs, encoding);
   stderr.write(error);
   stdout.write(message);
 };

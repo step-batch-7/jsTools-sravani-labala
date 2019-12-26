@@ -58,7 +58,7 @@ v0.1.1
     d)generateErrorMessage --done--
 ----------------------- 
 bug: 
-  node tail.js -n goodFile --validation done--
+  node tail.js -n goodFile --done--
       //when only option is passed then give error message
 ----------------------
 
@@ -77,5 +77,3 @@ bug:
 fixed the bug
 ------------------------
 
-bug:
-  need to amend parseArguments (it has same condition checked again)
