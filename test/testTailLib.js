@@ -3,7 +3,6 @@ const {
   parseArguments,
   loadLinesFromFile,
   getRequiredLastLines,
-  generateErrorMessage,
   handleSubOperations
 } = require("../src/tailLib.js");
 
@@ -90,23 +89,11 @@ describe("loadLinesFromFile", function() {
 
 describe("getRequiredLastLines", function() {
   it("should give the required number of lines of the file content", function() {
-    const fileContent = {
-      numberOfLines: 10,
-      content: ["1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15"]
-    };
+    const numberOfLines = 10;
+    const content = ["1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15"];
     assert.strictEqual(
-      getRequiredLastLines(fileContent),
+      getRequiredLastLines(numberOfLines, content),
       "6\n7\n8\n9\n10\n11\n12\n13\n14\n15"
-    );
-  });
-});
-
-describe("generateErrorMessage", function() {
-  it("should give the error message along with the file name", function() {
-    const fileName = ["wrongFile"];
-    assert.strictEqual(
-      generateErrorMessage(fileName),
-      "tail: wrongFile: no such file or directory"
     );
   });
 });
@@ -134,13 +121,6 @@ describe("handleSubOperations", function() {
         encoding
       ),
       { message: "6\n7\n8\n9\n10\n11\n12\n13\n14\n15", error: "" }
-    );
-  });
-  it("should give 'waiting for standard input' if the file names are not mentioned", function() {
-    const commandLineArgs = ["node", "tail.js"];
-    assert.strictEqual(
-      handleSubOperations(commandLineArgs),
-      "waiting for standard input"
     );
   });
   it("should give error if the options are not valid", function() {
