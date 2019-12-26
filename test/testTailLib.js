@@ -1,9 +1,11 @@
+"use strict";
+
 const assert = require("chai").assert;
 const {
   parseOptions,
   loadContent,
   extractLines,
-  tail
+  performTail
 } = require("../src/tailLib.js");
 
 describe("parseOptions", function() {
@@ -93,7 +95,7 @@ describe("extractLines", function() {
   });
 });
 
-describe("tail", function() {
+describe("performTail", function() {
   it("should give the required lines of the file if the file name is mentioned and if it exists", function() {
     const existsSync = function(path) {
       assert.strictEqual(path, "goodFile");
@@ -107,7 +109,7 @@ describe("tail", function() {
     const commandLineArgs = ["goodFile"];
     const encoding = "utf8";
     assert.deepStrictEqual(
-      tail(
+      performTail(
         commandLineArgs,
         {
           existsSync,
@@ -121,7 +123,7 @@ describe("tail", function() {
   it("should give error if the options are not valid", function() {
     const error = "tail: illegal offset -- goodFile";
     const commandLineArgs = ["-n", "goodFile"];
-    assert.deepStrictEqual(tail(commandLineArgs), {
+    assert.deepStrictEqual(performTail(commandLineArgs), {
       error: error,
       message: ""
     });
@@ -136,12 +138,18 @@ describe("tail", function() {
     };
     const encoding = "utf8";
     assert.deepStrictEqual(
-      tail(["wrongFile"], {
+      performTail(["wrongFile"], {
         existsSync,
         readFileSync,
         encoding
       }),
       { error: "tail: wrongFile: no such file or directory", message: "" }
     );
+  });
+  it("should give nothing if the number of lines is zero", function() {
+    assert.deepStrictEqual(performTail(["-n", "0", "goodFile"]), {
+      error: "",
+      message: ""
+    });
   });
 });

@@ -1,13 +1,14 @@
+"use strict";
+
 const extractLines = function(numberOfLines, content) {
   const splitContent = content.split("\n");
   return splitContent.slice(-numberOfLines).join("\n");
 };
 
 const loadContent = function(fileName, fs, encoding) {
-  const { existsSync, readFileSync } = fs;
   const error = `tail: ${fileName}: no such file or directory`;
-  if (!existsSync(fileName)) return { error, content: "" };
-  return { error: "", content: readFileSync(fileName, encoding) };
+  if (!fs.existsSync(fileName)) return { error, content: "" };
+  return { error: "", content: fs.readFileSync(fileName, encoding) };
 };
 
 const parseOptions = function(commandLineArgs) {
@@ -21,9 +22,10 @@ const parseOptions = function(commandLineArgs) {
   return { parsedArgs, inputError: "" };
 };
 
-const tail = function(commandLineArgs, fs, encoding) {
+const performTail = function(commandLineArgs, fs, encoding) {
   const { inputError, parsedArgs } = parseOptions(commandLineArgs);
   if (inputError) return { error: inputError, message: "" };
+  if (parsedArgs.lines == 0) return { error: "", message: "" };
   const fileName = parsedArgs.fileName;
   const { error, content } = loadContent(fileName, fs, encoding);
   if (error) return { error, message: "" };
@@ -34,5 +36,5 @@ module.exports = {
   parseOptions,
   loadContent,
   extractLines,
-  tail
+  performTail
 };
