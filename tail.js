@@ -11,12 +11,6 @@ const main = function() {
     stdout.write(content);
   };
   tail(commandLineArgs, { readFileSync, existsSync }, display);
-  // const { error, content } = tail(commandLineArgs, {
-  //   readFileSync,
-  //   existsSync
-  // });
-  // stderr.write(error);
-  // stdout.write(content);
 };
 
 main();
