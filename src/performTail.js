@@ -2,12 +2,12 @@
 
 const { parseOptions, loadContent, extractLines } = require("./tailLib.js");
 
-const performTail = function(commandLineArgs, fs) {
+const tail = function(commandLineArgs, fs, display) {
   const { inputError, parsedArgs } = parseOptions(commandLineArgs);
-  if (inputError) return { error: inputError, content: "" };
+  if (inputError) return display("", inputError);
   const { error, content } = loadContent(parsedArgs.fileName, fs);
-  if (error) return { error, content: "" };
-  return { content: extractLines(parsedArgs.lines, content), error: "" };
+  if (error) return display("", error);
+  return display(extractLines(parsedArgs.lines, content), "");
 };
 
-exports.performTail = performTail;
+exports.tail = tail;

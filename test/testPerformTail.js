@@ -1,9 +1,9 @@
 "use strict";
 
 const assert = require("chai").assert;
-const performTail = require("../src/performTail").performTail;
+const tail = require("../src/performTail").tail;
 
-describe("performTail", function() {
+describe("tail", function() {
   it("should give the required lines of the file if the file name is mentioned and if it exists", function() {
     const existsSync = function(path) {
       assert.strictEqual(path, "goodFile");
@@ -14,20 +14,21 @@ describe("performTail", function() {
       assert.strictEqual(encoding, "utf8");
       return "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15";
     };
-    assert.deepStrictEqual(
-      performTail(["goodFile"], {
-        existsSync,
-        readFileSync
-      }),
-      { content: "6\n7\n8\n9\n10\n11\n12\n13\n14\n15", error: "" }
+    const display = function(content, error) {
+      assert.strictEqual(error, "");
+      assert.strictEqual(content, "6\n7\n8\n9\n10\n11\n12\n13\n14\n15");
+    };
+    assert.isUndefined(
+      tail(["goodFile"], { existsSync, readFileSync }, display)
     );
   });
 
   it("should give error if the options are not valid", function() {
-    assert.deepStrictEqual(performTail(["-n", "goodFile"]), {
-      error: "tail: illegal offset -- goodFile",
-      content: ""
-    });
+    const display = function(content, error) {
+      assert.strictEqual(error, "tail: illegal offset -- goodFile");
+      assert.strictEqual(content, "");
+    };
+    assert.isUndefined(tail(["-n", "goodFile"], {}, display));
   });
 
   it("should give the error content if the file doesn't exist", function() {
@@ -38,12 +39,12 @@ describe("performTail", function() {
     const readFileSync = function() {
       return;
     };
-    assert.deepStrictEqual(
-      performTail(["wrongFile"], {
-        existsSync,
-        readFileSync
-      }),
-      { error: "tail: wrongFile: no such file or directory", content: "" }
+    const display = function(content, error) {
+      assert.strictEqual(error, "tail: wrongFile: no such file or directory");
+      assert.strictEqual(content, "");
+    };
+    assert.isUndefined(
+      tail(["wrongFile"], { existsSync, readFileSync }, display)
     );
   });
 
@@ -57,12 +58,12 @@ describe("performTail", function() {
       assert.strictEqual(encoding, "utf8");
       return "1\n2\n3\n4\n5";
     };
-    assert.deepStrictEqual(
-      performTail(["-n", "0", "goodFile"], { existsSync, readFileSync }),
-      {
-        error: "",
-        content: ""
-      }
+    const display = function(content, error) {
+      assert.strictEqual(error, "");
+      assert.strictEqual(content, "");
+    };
+    assert.isUndefined(
+      tail(["-n", "0", "goodFile"], { existsSync, readFileSync }, display)
     );
   });
 });

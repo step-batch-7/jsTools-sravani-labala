@@ -3,6 +3,7 @@
 const extractLines = function(numberOfLines, content) {
   if (numberOfLines == 0) return "";
   const splitContent = content.split("\n");
+  if (splitContent[splitContent.length - 1] == "") splitContent.pop();
   return splitContent.slice(-numberOfLines).join("\n");
 };
 
@@ -12,15 +13,11 @@ const loadContent = function(fileName, fs) {
   return { error: "", content: fs.readFileSync(fileName, "utf8") };
 };
 
-const isOptionLinesGiven = function(option) {
-  return option.slice(0, 2) == "-n" || Number.isInteger(+option);
-};
-
 const parseOptions = function(userArgs) {
   const [firstOption, secondOption] = userArgs;
   const lines = +firstOption.slice(-1) || +secondOption;
   let parsedArgs = { lines: 10, fileName: userArgs[0] };
-  if (isOptionLinesGiven(firstOption)) {
+  if (firstOption.slice(0, 2) == "-n" || Number.isInteger(+firstOption)) {
     if (!Number.isInteger(lines))
       return { inputError: `tail: illegal offset -- ${secondOption}` };
     parsedArgs.lines = lines;

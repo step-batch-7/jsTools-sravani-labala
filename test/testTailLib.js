@@ -65,8 +65,15 @@ describe("loadContent", function() {
 });
 
 describe("extractLines", function() {
-  it("should give the desired last number of lines of the file content", function() {
+  it("should give the desired last number of lines of the file content without empty line at end", function() {
     const content = "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15";
+    assert.strictEqual(
+      extractLines(10, content),
+      "6\n7\n8\n9\n10\n11\n12\n13\n14\n15"
+    );
+  });
+  it("should give the desired last number of lines of the file content with empty line at end", function() {
+    const content = "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n";
     assert.strictEqual(
       extractLines(10, content),
       "6\n7\n8\n9\n10\n11\n12\n13\n14\n15"

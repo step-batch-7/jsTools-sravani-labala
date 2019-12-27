@@ -4,10 +4,10 @@ v0.1
   node tail.js -n 6 fileName  
 
 v0.2
-  node tail.js     
-  node tail.js -n 6   
   cat fileName | node tail.js   
   cat fileName | node tail.js -n 6
+  node tail.js     
+  node tail.js -n 6   
 
 v0.3 
   node tail.js fileName1 fileName2 ...  
@@ -109,3 +109,9 @@ v0.1.4
     d)generateErrorMessage --done--
 
 ------------------------------
+---------version 0.2----------
+v0.2.0
+  cat fileName | node tail.js   
+  a)parseArguments
+  b)getContent
+  c)generateRequiredLines
