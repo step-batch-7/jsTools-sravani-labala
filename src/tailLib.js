@@ -1,40 +1,36 @@
 "use strict";
 
 const extractLines = function(numberOfLines, content) {
+  if (numberOfLines == 0) return "";
   const splitContent = content.split("\n");
   return splitContent.slice(-numberOfLines).join("\n");
 };
 
-const loadContent = function(fileName, fs, encoding) {
+const loadContent = function(fileName, fs) {
   const error = `tail: ${fileName}: no such file or directory`;
   if (!fs.existsSync(fileName)) return { error, content: "" };
-  return { error: "", content: fs.readFileSync(fileName, encoding) };
+  return { error: "", content: fs.readFileSync(fileName, "utf8") };
 };
 
-const parseOptions = function(commandLineArgs) {
-  let parsedArgs = { lines: 10, fileName: commandLineArgs[0] };
-  const inputError = `tail: illegal offset -- ${commandLineArgs[1]}`;
-  if (commandLineArgs[0] == "-n") {
-    if (!Number.isInteger(+commandLineArgs[1])) return { inputError };
-    parsedArgs.lines = Math.abs(+commandLineArgs[1]);
-    parsedArgs.fileName = commandLineArgs[2];
+const isOptionLinesGiven = function(option) {
+  return option.slice(0, 2) == "-n" || Number.isInteger(+option);
+};
+
+const parseOptions = function(userArgs) {
+  const [firstOption, secondOption] = userArgs;
+  const lines = +firstOption.slice(-1) || +secondOption;
+  let parsedArgs = { lines: 10, fileName: userArgs[0] };
+  if (isOptionLinesGiven(firstOption)) {
+    if (!Number.isInteger(lines))
+      return { inputError: `tail: illegal offset -- ${secondOption}` };
+    parsedArgs.lines = lines;
+    parsedArgs.fileName = userArgs[userArgs.length - 1];
   }
   return { parsedArgs, inputError: "" };
-};
-
-const performTail = function(commandLineArgs, fs, encoding) {
-  const { inputError, parsedArgs } = parseOptions(commandLineArgs);
-  if (inputError) return { error: inputError, message: "" };
-  if (parsedArgs.lines == 0) return { error: "", message: "" };
-  const fileName = parsedArgs.fileName;
-  const { error, content } = loadContent(fileName, fs, encoding);
-  if (error) return { error, message: "" };
-  return { message: extractLines(parsedArgs.lines, content), error: "" };
 };
 
 module.exports = {
   parseOptions,
   loadContent,
-  extractLines,
-  performTail
+  extractLines
 };
