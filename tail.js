@@ -5,7 +5,8 @@ const { stderr, stdout } = process;
 const tail = require('./src/performTail.js').tail;
 
 const main = function() {
-  const commandLineArgs = process.argv.slice(2);
+  const startOfOptions = 2;
+  const commandLineArgs = process.argv.slice(startOfOptions);
   const display = function(content, error) {
     stderr.write(error);
     stdout.write(content);

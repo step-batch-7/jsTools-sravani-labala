@@ -6,8 +6,8 @@ const extractLines = function(numberOfLines, content) {
     return '';
   }
   const splitContent = content.split('\n');
-  const lastIndex = 1;
-  if (splitContent[splitContent.length - lastIndex] === '') {
+  const lastIndexFinder = 1;
+  if (splitContent[splitContent.length - lastIndexFinder] === '') {
     splitContent.pop();
   }
   return splitContent.slice(-numberOfLines).join('\n');
