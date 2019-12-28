@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-const { readFileSync, existsSync } = require("fs");
+const { readFileSync, existsSync } = require('fs');
 const { stderr, stdout } = process;
-const tail = require("./src/performTail.js").tail;
+const tail = require('./src/performTail.js').tail;
 
 const main = function() {
   const commandLineArgs = process.argv.slice(2);
