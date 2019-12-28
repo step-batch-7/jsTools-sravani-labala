@@ -14,8 +14,6 @@ const loadContent = function(fileName, fs) {
 };
 
 const parseOptions = function(userArgs) {
-  if (userArgs.length == 0)
-    return { parsedArgs: { lines: 10, fileName: "" }, inputError: "" };
   const [firstOption, secondOption] = userArgs;
   const lines = +firstOption.slice(-1) || +secondOption;
   let parsedArgs = { lines: 10, fileName: userArgs[0] };
@@ -25,24 +23,11 @@ const parseOptions = function(userArgs) {
     parsedArgs.lines = lines;
     parsedArgs.fileName = userArgs.pop();
   }
-  if (Number.isInteger(+parsedArgs.fileName)) {
-    parsedArgs.fileName = "";
-  }
   return { parsedArgs, inputError: "" };
-};
-
-const getContent = function(lines, stdin, display) {
-  let content = [];
-  stdin.setEncoding("utf8");
-  stdin.on("data", data => {
-    content.push(data.trim());
-  });
-  stdin.on("end", () => display(extractLines(lines, content.join("\n")), ""));
 };
 
 module.exports = {
   parseOptions,
   loadContent,
-  extractLines,
-  getContent
+  extractLines
 };
