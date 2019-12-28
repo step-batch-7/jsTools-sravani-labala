@@ -111,7 +111,13 @@ v0.1.4
 ------------------------------
 ---------version 0.2----------
 v0.2.0
-  cat fileName | node tail.js   
+  cat fileName | node tail.js   or node tail.js
+  a)parseArguments
+  b)getContent
+  c)generateRequiredLines
+
+v0.2.1
+  cat fileName|node tail.js -n 5 or node tail.js -n 5
   a)parseArguments
   b)getContent
   c)generateRequiredLines

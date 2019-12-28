@@ -23,7 +23,10 @@ const parseOptions = function(userArgs) {
     if (!Number.isInteger(lines))
       return { inputError: `tail: illegal offset -- ${secondOption}` };
     parsedArgs.lines = lines;
-    parsedArgs.fileName = userArgs[userArgs.length - 1];
+    parsedArgs.fileName = userArgs.pop();
+  }
+  if (Number.isInteger(+parsedArgs.fileName)) {
+    parsedArgs.fileName = "";
   }
   return { parsedArgs, inputError: "" };
 };
