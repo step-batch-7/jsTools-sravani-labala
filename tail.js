@@ -1,7 +1,7 @@
 "use strict";
 
 const { readFileSync, existsSync } = require("fs");
-const { stderr, stdout } = process;
+const { stderr, stdout, stdin } = process;
 const tail = require("./src/performTail.js").tail;
 
 const main = function() {
@@ -10,7 +10,7 @@ const main = function() {
     stderr.write(error);
     stdout.write(content);
   };
-  tail(commandLineArgs, { readFileSync, existsSync }, display);
+  tail(commandLineArgs, { readFileSync, existsSync }, display, stdin);
 };
 
 main();
