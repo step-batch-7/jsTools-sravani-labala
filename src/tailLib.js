@@ -13,12 +13,12 @@ const extractLines = function(numberOfLines, content) {
   return splitContent.slice(-numberOfLines).join('\n');
 };
 
-const loadContent = function(fileName, fs) {
-  const error = `tail: ${fileName}: no such file or directory`;
-  if (!fs.existsSync(fileName)) {
-    return { error, content: '' };
+const loadContent = function({ err, data }, parsedArgs, display) {
+  const error = `tail: ${parsedArgs.fileName}: no such file or directory`;
+  if (err) {
+    return display('', error);
   }
-  return { error: '', content: fs.readFileSync(fileName, 'utf8') };
+  display(extractLines(parsedArgs.lines, data), '');
 };
 
 const isOptionGiven = function(option) {
