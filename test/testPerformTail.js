@@ -5,8 +5,8 @@ const sinon = require('sinon');
 const tail = require('../src/performTail').tail;
 
 describe('tail', function() {
-  const display = sinon.stub();
   it('should give tail lines of file if the file name is given', function() {
+    const display = sinon.stub();
     const readFile = function(path, encoding, callback) {
       assert.strictEqual(path, 'goodFile');
       assert.strictEqual(encoding, 'utf8');
@@ -16,16 +16,20 @@ describe('tail', function() {
     assert.isTrue(
       display.calledWithExactly('6\n7\n8\n9\n10\n11\n12\n13\n14\n15', '')
     );
+    assert.isTrue(display.calledOnce);
   });
 
   it('should give error if the options are not valid', function() {
+    const display = sinon.stub();
     assert.isUndefined(tail(['-n', 'goodFile'], {}, display));
     assert.isTrue(
       display.calledWithExactly('', 'tail: illegal offset -- goodFile')
     );
+    assert.isTrue(display.calledOnce);
   });
 
   it('should give error if the file does not exist', function() {
+    const display = sinon.stub();
     const readFile = function(path, encoding, callback) {
       assert.strictEqual(path, 'wrongFile');
       assert.strictEqual(encoding, 'utf8');
@@ -38,9 +42,11 @@ describe('tail', function() {
         'tail: wrongFile: no such file or directory'
       )
     );
+    assert.isTrue(display.calledOnce);
   });
 
   it('should give nothing if the number of lines is zero', function() {
+    const display = sinon.stub();
     const readFile = function(path, encoding, callback) {
       assert.strictEqual(path, 'goodFile');
       assert.strictEqual(encoding, 'utf8');
@@ -48,5 +54,6 @@ describe('tail', function() {
     };
     assert.isUndefined(tail(['-n', '0', 'goodFile'], readFile, display));
     assert.isTrue(display.calledWithExactly('', ''));
+    assert.isTrue(display.calledOnce);
   });
 });

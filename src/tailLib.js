@@ -22,9 +22,7 @@ const loadContent = function({ err, data }, parsedArgs, display) {
 };
 
 const isOptionGiven = function(option) {
-  const from = 0;
-  const to = 2;
-  return option.slice(from, to) === '-n' || Number.isInteger(+option);
+  return option.includes('-n') || Number.isInteger(+option);
 };
 
 const parseOptions = function(userArgs) {

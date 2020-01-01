@@ -50,6 +50,7 @@ describe('loadContent', function() {
         'tail: wrongFile: no such file or directory'
       )
     );
+    assert.isTrue(display.calledOnce);
   });
   it('should load the content of the file if file exists', function() {
     assert.isUndefined(
