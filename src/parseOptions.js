@@ -50,6 +50,9 @@ const getNumberOfLines = function(firstOption, secondOption) {
 
 const parseOptions = function(userArgs) {
   const [firstOption, secondOption] = userArgs;
+  if (!firstOption) {
+    return { parsedArgs: { lines: '10', fileName: undefined }, inputError: '' };
+  }
   if (isOptionInvalid(firstOption)) {
     return { inputError: getUsage(firstOption) };
   }

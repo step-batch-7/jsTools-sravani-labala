@@ -1,0 +1,6 @@
+cat ./appTests/testingFiles/fileWithMoreLines.txt | node tail.js -5
+11
+12
+13
+14
+15

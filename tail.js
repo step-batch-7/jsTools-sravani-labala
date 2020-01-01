@@ -1,7 +1,7 @@
 'use strict';
 
 const { readFile } = require('fs');
-const { stderr, stdout } = process;
+const { stderr, stdout, stdin } = process;
 const tail = require('./src/performTail.js').tail;
 
 const main = function() {
@@ -11,7 +11,7 @@ const main = function() {
     stderr.write(error);
     stdout.write(content);
   };
-  tail(commandLineArgs, readFile, display);
+  tail(commandLineArgs, { readFile, stdin }, display);
 };
 
 main();

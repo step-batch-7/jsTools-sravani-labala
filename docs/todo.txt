@@ -109,15 +109,33 @@ v0.1.4
     d)generateErrorMessage --done--
 
 ------------------------------
+
+v0.1.5
+  v0.1.5.0
+    node tail.js -n +6 goodFile
+      a)parseArguments --done--
+      b)handleOperation --done--
+      c)loadLines --done--
+      d)generateRequiredLines --done--
+
+  v0.1.5.1
+    node tail.js -n +6 badFile
+    a)parseArguments --done--
+    b)handleOperation --done--
+    c)loadLines --done--
+    d)generateErrorMessage --done--
+
+----------------------------------
+
 ---------version 0.2----------
 v0.2.0
   cat fileName | node tail.js   or node tail.js
-  a)parseArguments
-  b)getContent
-  c)generateRequiredLines
+  a)parseArguments --done--
+  b)getContent --done--
+  c)generateRequiredLines --done--
 
 v0.2.1
-  cat fileName|node tail.js -n 5 or node tail.js -n 5
-  a)parseArguments
-  b)getContent
-  c)generateRequiredLines
+  cat fileName | node tail.js -n 5 or node tail.js -n 5
+  a)parseArguments --done--
+  b)getContent --done--
+  c)generateRequiredLines --done--

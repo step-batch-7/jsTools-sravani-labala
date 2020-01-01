@@ -32,4 +32,16 @@ describe('parseOptions', function() {
       inputError: 'tail: illegal option -- -k\nusage: tail [-n #] [file]'
     });
   });
+  it('should parse the when standard input is given', function() {
+    assert.deepStrictEqual(parseOptions([]), {
+      parsedArgs: { lines: '10', fileName: undefined },
+      inputError: ''
+    });
+  });
+  it('should parse the when standard input is given with lines', function() {
+    assert.deepStrictEqual(parseOptions(['5']), {
+      parsedArgs: { lines: '5', fileName: undefined },
+      inputError: ''
+    });
+  });
 });

@@ -24,7 +24,19 @@ const loadContent = function({ err, data }, parsedArgs, display) {
   display(extractLines(parsedArgs.lines, data), '');
 };
 
+const getContent = function(lines, stdin, display) {
+  let content = [];
+  stdin.setEncoding('utf8');
+  stdin.on('data', data => {
+    content += data;
+  });
+  stdin.on('end', () => {
+    display(extractLines(lines, content), '');
+  });
+};
+
 module.exports = {
   loadContent,
-  extractLines
+  extractLines,
+  getContent
 };
