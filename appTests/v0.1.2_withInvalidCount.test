@@ -1,0 +1,3 @@
+node tail.js -k goodFile
+tail: illegal option -- -k
+usage: tail [-n #] [file]

@@ -1,16 +1,19 @@
 'use strict';
 
 const extractLines = function(numberOfLines, content) {
-  const nil = 0;
-  if (numberOfLines === nil) {
-    return '';
-  }
+  const subtract = 1;
   const splitContent = content.split('\n');
-  const lastIndexFinder = 1;
-  if (splitContent[splitContent.length - lastIndexFinder] === '') {
+  if (numberOfLines.startsWith('+')) {
+    return splitContent.slice(numberOfLines - subtract).join('\n');
+  }
+  if (splitContent[splitContent.length - subtract] === '') {
     splitContent.pop();
   }
-  return splitContent.slice(-numberOfLines).join('\n');
+  const from = 0;
+  const extractedContent = splitContent
+    .reverse()
+    .slice(from, Math.abs(numberOfLines));
+  return extractedContent.reverse().join('\n');
 };
 
 const loadContent = function({ err, data }, parsedArgs, display) {

@@ -1,4 +1,4 @@
-node tail.js -n 8 ./appTests/testingFiles/fileWithLesserLines.txt
+node tail.js -n -8 ./appTests/testingFiles/fileWithLesserLines.txt
 1
 2
 3

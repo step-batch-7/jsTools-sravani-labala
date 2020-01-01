@@ -30,7 +30,7 @@ describe('loadContent', function() {
           err: null,
           data: '1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15'
         },
-        { fileName: 'goodFile', lines: 10 },
+        { fileName: 'goodFile', lines: '10' },
         display
       )
     );
@@ -43,7 +43,7 @@ describe('loadContent', function() {
 
 describe('extractLines', function() {
   it('should extractLines if file does not have empty line at end', function() {
-    const numberOfLines = 10;
+    const numberOfLines = '10';
     const content = '1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15';
     assert.strictEqual(
       extractLines(numberOfLines, content),
@@ -52,10 +52,18 @@ describe('extractLines', function() {
   });
   it('should extractLines if file has empty line at end', function() {
     const content = '1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n';
-    const numberOfLines = 10;
+    const numberOfLines = '10';
     assert.strictEqual(
       extractLines(numberOfLines, content),
       '6\n7\n8\n9\n10\n11\n12\n13\n14\n15'
+    );
+  });
+  it('should extractLines if lines are given with + sign', function() {
+    const content = '1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15';
+    const numberOfLines = '+5';
+    assert.strictEqual(
+      extractLines(numberOfLines, content),
+      '5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15'
     );
   });
 });

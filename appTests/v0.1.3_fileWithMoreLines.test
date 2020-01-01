@@ -1,4 +1,4 @@
-node tail.js -5 ./appTests/testingFiles/fileWithMoreLines.txt
+node tail.js 5 ./appTests/testingFiles/fileWithMoreLines.txt
 11
 12
 13
