@@ -1,6 +1,7 @@
 'use strict';
 
-const { parseOptions, loadContent } = require('./tailLib.js');
+const { loadContent } = require('./tailLib.js');
+const { parseOptions } = require('./parseOptions');
 
 const tail = function(commandLineArgs, reader, display) {
   const { inputError, parsedArgs } = parseOptions(commandLineArgs);
