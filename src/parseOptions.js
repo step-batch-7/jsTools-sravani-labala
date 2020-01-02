@@ -8,20 +8,19 @@ const isOptionInvalid = function(option) {
   return option.startsWith('-') && !isOption(option);
 };
 
-const isFileName = function(file) {
-  return !(Number.isInteger(+file) || file.startsWith('-'));
-};
-
 const getFileName = function(contents) {
-  const firstIndex = 0;
+  const isFileName = function(file) {
+    return !(Number.isInteger(+file) || file.startsWith('-'));
+  };
   const fileName = contents.filter(isFileName);
+  const firstIndex = 0;
   return fileName[firstIndex];
 };
 
 const getUsage = function(option) {
-  let err = `tail: illegal option -- ${option}`;
-  err = err + '\nusage: tail [-n #] [file]';
-  return err;
+  let error = `tail: illegal option -- ${option}`;
+  error = error + '\nusage: tail [-n #] [file]';
+  return error;
 };
 
 const hasPlusSign = function(option1, option2) {

@@ -22,12 +22,12 @@ describe('parseOptions', function() {
       inputError: ''
     });
   });
-  it('should give error message when only option is mentioned', function() {
+  it('should give error message when offset is invalid', function() {
     assert.deepStrictEqual(parseOptions(['-n', 'goodFile']), {
       inputError: 'tail: illegal offset -- goodFile'
     });
   });
-  it('should give error message if option is not valid', function() {
+  it('should give error message if option is invalid', function() {
     assert.deepStrictEqual(parseOptions(['-k', 'goodFile']), {
       inputError: 'tail: illegal option -- -k\nusage: tail [-n #] [file]'
     });

@@ -45,7 +45,7 @@ describe('tail', function() {
     assert.isTrue(display.calledOnce);
   });
 
-  it('should give nothing if the number of lines is zero', function() {
+  it('should valid if the number of lines is zero', function() {
     const display = sinon.stub();
     const readFile = function(path, encoding, callback) {
       assert.strictEqual(path, 'goodFile');
@@ -57,7 +57,7 @@ describe('tail', function() {
     assert.isTrue(display.calledOnce);
   });
 
-  it('should valid for standard input', function(done) {
+  it('should give tail lines for standard input', function(done) {
     const stdin = { setEncoding: sinon.fake(), on: sinon.fake() };
     const write = (output, error) => {
       assert.strictEqual(output, 'abc');
