@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('chai').assert;
-const { parseOptions } = require('../src/parseOptions.js');
+const {parseOptions} = require('../src/parseOptions.js');
 
 describe('parseOptions', function() {
   it('should parse fileName and the default lines as 10', function() {
@@ -34,13 +34,13 @@ describe('parseOptions', function() {
   });
   it('should parse the when standard input is given', function() {
     assert.deepStrictEqual(parseOptions([]), {
-      parsedArgs: { lines: '10', fileName: undefined },
+      parsedArgs: {lines: '10', fileName: undefined},
       inputError: ''
     });
   });
   it('should parse the when standard input is given with lines', function() {
     assert.deepStrictEqual(parseOptions(['5']), {
-      parsedArgs: { lines: '5', fileName: undefined },
+      parsedArgs: {lines: '5', fileName: undefined},
       inputError: ''
     });
   });

@@ -5,20 +5,90 @@ const sinon = require('sinon');
 const tail = require('../src/performTail').tail;
 
 describe('tail', function() {
-  it('should give tail lines of file if the file name is given', function() {
-    const display = sinon.stub();
-    const readFile = function(path, encoding, callback) {
-      assert.strictEqual(path, 'goodFile');
-      assert.strictEqual(encoding, 'utf8');
-      callback(null, '1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15');
+  it('should get the tail lines from the existing file', function() {
+    const createReadStream = {setEncoding: sinon.fake(), on: sinon.fake()};
+    const stream = {
+      pick: function() {
+        return createReadStream;
+      }
     };
-    tail(['goodFile'], { readFile }, display);
-    assert.isTrue(
-      display.calledWithExactly('6\n7\n8\n9\n10\n11\n12\n13\n14\n15', '')
-    );
+    const display = sinon.stub();
+    tail(['-n', '5', 'goodFile'], stream, display);
+    assert(createReadStream.setEncoding.calledWith('utf8'));
+    const verifyCreateReadStream = () => {
+      const firstIndex = 0;
+      const count = 3;
+      assert.strictEqual(
+        createReadStream.on.firstCall.args[firstIndex],
+        'data'
+      );
+      assert.strictEqual(
+        createReadStream.on.secondCall.args[firstIndex],
+        'end'
+      );
+      assert.strictEqual(createReadStream.on.callCount, count);
+    };
+    verifyCreateReadStream();
+    const secondIndex = 1;
+    createReadStream.on.firstCall.args[secondIndex]('1\n2\n3\n4\n5');
+    createReadStream.on.secondCall.args[secondIndex]();
+    assert.isTrue(display.calledWithExactly('1\n2\n3\n4\n5', ''));
     assert.isTrue(display.calledOnce);
   });
-
+  it('should get the error for the non existing file', function() {
+    const createReadStream = {setEncoding: sinon.fake(), on: sinon.fake()};
+    const stream = {
+      pick: function() {
+        return createReadStream;
+      }
+    };
+    const display = sinon.stub();
+    tail(['-n', '5', 'goodFile'], stream, display);
+    assert(createReadStream.setEncoding.calledWith('utf8'));
+    const verifyCreateReadStream = () => {
+      const firstIndex = 0;
+      const count = 3;
+      assert.strictEqual(
+        createReadStream.on.firstCall.args[firstIndex],
+        'data'
+      );
+      assert.strictEqual(
+        createReadStream.on.secondCall.args[firstIndex],
+        'end'
+      );
+      assert.strictEqual(createReadStream.on.callCount, count);
+    };
+    verifyCreateReadStream();
+    const secondIndex = 1;
+    createReadStream.on.firstCall.args[secondIndex]('');
+    createReadStream.on.secondCall.args[secondIndex]('');
+    assert.isTrue(display.calledWithExactly('', ''));
+    assert.isTrue(display.calledOnce);
+  });
+  it('should valid for standard input condition', function() {
+    const stdin = {setEncoding: sinon.fake(), on: sinon.fake()};
+    const stream = {
+      pick: function() {
+        return stdin;
+      }
+    };
+    const display = sinon.stub();
+    tail(['-n', '5', 'goodFile'], stream, display);
+    assert(stdin.setEncoding.calledWith('utf8'));
+    const verifyCreateReadStream = () => {
+      const firstIndex = 0;
+      const count = 3;
+      assert.strictEqual(stdin.on.firstCall.args[firstIndex], 'data');
+      assert.strictEqual(stdin.on.secondCall.args[firstIndex], 'end');
+      assert.strictEqual(stdin.on.callCount, count);
+    };
+    verifyCreateReadStream();
+    const secondIndex = 1;
+    stdin.on.firstCall.args[secondIndex]('1\n2\n3\n4\n5');
+    stdin.on.secondCall.args[secondIndex]();
+    assert.isTrue(display.calledWithExactly('1\n2\n3\n4\n5', ''));
+    assert.isTrue(display.calledOnce);
+  });
   it('should give error if the options are not valid', function() {
     const display = sinon.stub();
     tail(['-n', 'goodFile'], {}, display);
@@ -26,56 +96,5 @@ describe('tail', function() {
       display.calledWithExactly('', 'tail: illegal offset -- goodFile')
     );
     assert.isTrue(display.calledOnce);
-  });
-
-  it('should give error if the file does not exist', function() {
-    const display = sinon.stub();
-    const readFile = function(path, encoding, callback) {
-      assert.strictEqual(path, 'wrongFile');
-      assert.strictEqual(encoding, 'utf8');
-      callback('error', undefined);
-    };
-    tail(['wrongFile'], { readFile }, display);
-    assert.isTrue(
-      display.calledWithExactly(
-        '',
-        'tail: wrongFile: no such file or directory'
-      )
-    );
-    assert.isTrue(display.calledOnce);
-  });
-
-  it('should valid if the number of lines is zero', function() {
-    const display = sinon.stub();
-    const readFile = function(path, encoding, callback) {
-      assert.strictEqual(path, 'goodFile');
-      assert.strictEqual(encoding, 'utf8');
-      callback(null, '1\n2\n3\n4\n5\n6\n7\n8\n9\n10');
-    };
-    tail(['-n', '0', 'goodFile'], { readFile }, display);
-    assert.isTrue(display.calledWithExactly('', ''));
-    assert.isTrue(display.calledOnce);
-  });
-
-  it('should give tail lines for standard input', function(done) {
-    const stdin = { setEncoding: sinon.fake(), on: sinon.fake() };
-    const write = (output, error) => {
-      assert.strictEqual(output, 'abc');
-      assert.strictEqual(error, '');
-      done();
-    };
-    tail([], { stdin }, write);
-    assert(stdin.setEncoding.calledWith('utf8'));
-    const verifyStdin = () => {
-      const firstIndex = 0;
-      const count = 2;
-      assert.strictEqual(stdin.on.firstCall.args[firstIndex], 'data');
-      assert.strictEqual(stdin.on.secondCall.args[firstIndex], 'end');
-      assert.strictEqual(stdin.on.callCount, count);
-    };
-    verifyStdin();
-    const secondIndex = 1;
-    stdin.on.firstCall.args[secondIndex]('abc');
-    stdin.on.secondCall.args[secondIndex]();
   });
 });

@@ -1,8 +1,9 @@
 'use strict';
 
-const { readFile } = require('fs');
-const { stderr, stdout, stdin } = process;
+const {createReadStream} = require('fs');
+const {stderr, stdout, stdin} = process;
 const tail = require('./src/performTail.js').tail;
+const StreamPicker = require('./src/streamPicker');
 
 const main = function() {
   const startOfOptions = 2;
@@ -11,7 +12,8 @@ const main = function() {
     stderr.write(error);
     stdout.write(content);
   };
-  tail(commandLineArgs, { readFile, stdin }, display);
+  const stream = new StreamPicker(stdin, createReadStream);
+  tail(commandLineArgs, stream, display);
 };
 
 main();

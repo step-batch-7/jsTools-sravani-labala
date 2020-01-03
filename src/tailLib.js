@@ -16,27 +16,22 @@ const extractLines = function(numberOfLines, content) {
   return extractedContent.reverse().join('\n');
 };
 
-const loadContent = function({ err, data }, parsedArgs, display) {
+const streamAction = function(parsedArgs, stdin, display) {
   const error = `tail: ${parsedArgs.fileName}: no such file or directory`;
-  if (err) {
-    return display('', error);
-  }
-  display(extractLines(parsedArgs.lines, data), '');
-};
-
-const getContent = function(lines, stdin, display) {
   let content = [];
   stdin.setEncoding('utf8');
   stdin.on('data', data => {
     content += data;
   });
   stdin.on('end', () => {
-    display(extractLines(lines, content), '');
+    display(extractLines(parsedArgs.lines, content), '');
+  });
+  stdin.on('error', () => {
+    display('', error);
   });
 };
 
 module.exports = {
-  loadContent,
-  extractLines,
-  getContent
+  streamAction,
+  extractLines
 };

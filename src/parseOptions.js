@@ -40,27 +40,27 @@ const getNumberOfLines = function(firstOption, secondOption) {
   const lines = getCountValue(firstOption, secondOption);
   if (isOption(firstOption)) {
     if (!Number.isInteger(+lines)) {
-      return { inputError: `tail: illegal offset -- ${secondOption}` };
+      return {inputError: `tail: illegal offset -- ${secondOption}`};
     }
-    return { lines: `${lines}`, inputError: '' };
+    return {lines: `${lines}`, inputError: ''};
   }
-  return { lines: '10', inputError: '' };
+  return {lines: '10', inputError: ''};
 };
 
 const parseOptions = function(userArgs) {
   const [firstOption, secondOption] = userArgs;
   if (!firstOption) {
-    return { parsedArgs: { lines: '10', fileName: undefined }, inputError: '' };
+    return {parsedArgs: {lines: '10', fileName: undefined}, inputError: ''};
   }
   if (isOptionInvalid(firstOption)) {
-    return { inputError: getUsage(firstOption) };
+    return {inputError: getUsage(firstOption)};
   }
-  const { inputError, lines } = getNumberOfLines(firstOption, secondOption);
+  const {inputError, lines} = getNumberOfLines(firstOption, secondOption);
   if (inputError) {
-    return { inputError };
+    return {inputError};
   }
-  const parsedArgs = { lines, fileName: getFileName(userArgs) };
-  return { parsedArgs, inputError: '' };
+  const parsedArgs = {lines, fileName: getFileName(userArgs)};
+  return {parsedArgs, inputError: ''};
 };
 
-module.exports = { parseOptions };
+module.exports = {parseOptions};
